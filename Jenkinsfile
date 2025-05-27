@@ -38,8 +38,8 @@ pipeline {
                             if (isUnix()) {
                                 sh """
                                     ${scannerHome}/bin/sonar-scanner \
-                                    -Dsonar.projectKey=jenkins-test \
-                                    -Dsonar.projectName='jenkins-test' \
+                                    -Dsonar.projectKey=TP-security \
+                                    -Dsonar.projectName='TP-security' \
                                     -Dsonar.java.binaries=target/classes \
                                     -Dsonar.sources=src/main/java \
                                     -Dsonar.tests=src/test/java \
@@ -50,8 +50,8 @@ pipeline {
                             } else {
                                 bat """
                                     ${scannerHome}/bin/sonar-scanner \
-                                    -Dsonar.projectKey=jenkins-test \
-                                    -Dsonar.projectName='jenkins-test' \
+                                    -Dsonar.projectKey=TP-security \
+                                    -Dsonar.projectName='TP-security' \
                                     -Dsonar.java.binaries=target/classes \
                                     -Dsonar.sources=src/main/java \
                                     -Dsonar.tests=src/test/java \
