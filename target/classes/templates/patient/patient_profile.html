@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="patient/bases/base::layout(~{::section})">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section>
+    <h3 class="text-center pt-3"> Patient Profile </h3>
+    <div class="bg"></div>
+    <div class="main" align="center">
+        <!-- Change your profile -->
+        <img class="pf" th:src="${user.getImageURL()}" style="object-fit: cover"/>
+        <div class="contain">
+            <div class="i_space"></div>
+            <!-- Change your name -->
+            <h2 class="title pt-4" th:text="${user.getName()}"></h2>
+            <!-- Change your bio -->
+            <p class="summary" th:text="${user.getAbout()}"></p>
+            <!-- Change your link e-mail -->
+            <div class="text-center d-flex justify-content-center pt-4">
+                <i class='bx bx-envelope px-2' style="font-size: 25px"></i>
+                <span> Email :  </span>
+                <span th:text="' '+${user.getEmail()}"></span>
+            </div>
+            <div class="text-center d-flex justify-content-center pt-5">
+                <i class='bx bx-phone px-2' style="font-size: 25px"></i>
+
+                <span> Phone : </span>
+                <span th:text="${user.getPhone()}"></span>
+            </div>
+            <div class="text-center d-flex justify-content-center pt-5">
+                <i class='bx bx-calendar-star px-2' style="font-size: 25px"></i>
+
+                <span> Date of Birth : </span>
+                <span th:text="${user.getDOB()}"></span>
+            </div>
+            <div class="text-center d-flex justify-content-center pt-5 pb-5">
+                <i class='bx bx-current-location px-2' style="font-size: 25px"></i>
+
+                <span> My Address : </span>
+                <span th:text="${user.getAddress()}"></span>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
