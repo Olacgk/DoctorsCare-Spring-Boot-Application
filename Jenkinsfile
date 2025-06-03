@@ -41,7 +41,9 @@ pipeline {
                             -Dsonar.token=${SONAR_TOKEN} \
                             -Dsonar.host.url=${SONAR_HOST_URL}
                         """
-                        isUnix() ? sh(scanCmd) : bat(scanCmd)
+                        withCredentials([string(credentialsId: 'SonarQube_token', variable: 'SONAR_TOKEN_SECURE')]){
+                        	isUnix() ? sh(scanCmd) : bat(scanCmd)
+						}
                     }
                 }
             }
