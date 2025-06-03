@@ -69,18 +69,20 @@ pipeline {
         //Etape 3: Sonarqube Quality
          stage('SonarQube Publish') {
 			steps {
-				sonarQubePublish()
-          }
+				timeout(time: 2, unit: 'MINUTES') {
+					waitForQualityGate abortPipeline: true
+				}
+			}
         }
         stage('Quality Gate') {
 			steps {
 				// Vérifiez les règles de qualité
         		// En cas d'échec, bloquez le build
 			script {
-				if (sonarQubeQualityGate('http://localhost:9000', $SONAR_TOKEN_SECURE, 'TP-security')) {
-					echo 'Quality gate passed'
+					if (sonarQubeQualityGate('http://localhost:9000', $SONAR_TOKEN_SECURE, 'TP-security')) {
+						echo 'Quality gate passed'
 			  } else {
-					echo 'Quality gate failed'
+						echo 'Quality gate failed'
 					error('Build failed due to SonarQube Quality Gate')
 			  }
 			}
