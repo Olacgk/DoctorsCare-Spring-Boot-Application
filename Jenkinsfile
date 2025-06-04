@@ -71,7 +71,7 @@ pipeline {
 				script{
 					try {
 					timeout(time: 2, unit: 'MINUTES') {
-						def qg = waitForQualityGate abortPipeline: true
+						def qg = waitForQualityGate( abortPipeline: true, credentialsId: 'SonarQube_token' )
 						echo "Quality Gate Status: ${qg.status}"
 					}
 					} catch (Exception e) {
