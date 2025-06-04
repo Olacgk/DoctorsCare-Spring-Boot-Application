@@ -9,7 +9,7 @@ pipeline {
     environment {
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
         SONAR_TOKEN = credentials('SonarQube_token')
-        SONAR_HOST_URL = 'http://host.docker.internal:9000'
+        SONAR_HOST_URL = 'http://sonarqube:9000'
         PROJECT_KEY = 'TP-security'
         PROJECT_NAME = 'TP-security'
         MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
