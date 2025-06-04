@@ -44,8 +44,7 @@ pipeline {
                                     -Dsonar.sources=src/main/java \
                                     -Dsonar.tests=src/test/java \
                                     -Dsonar.junit.reportPaths=target/surefire-reports \
-                                    -Dsonar.token=$SONAR_TOKEN_SECURE \
-                                    -Dsonar.host.url=http://host.docker.internal:9000
+                                    -Dsonar.token=$SONAR_TOKEN_SECURE
                                 """
                             } else {
 								bat """
@@ -56,8 +55,7 @@ pipeline {
                                     -Dsonar.sources=src/main/java \
                                     -Dsonar.tests=src/test/java \
                                     -Dsonar.junit.reportPaths=target/surefire-reports \
-                                    -Dsonar.token=$SONAR_TOKEN_SECURE \
-                                    -Dsonar.host.url=http://host.docker.internal:9000
+                                    -Dsonar.token=$SONAR_TOKEN_SECURE
                                 """
                             }
                         }
