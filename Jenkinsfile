@@ -66,14 +66,16 @@ pipeline {
 
         stage('Quality Gate') {
 			steps {
-				try {
-					timeout(time: 2, unit: 'MINUTES') {
-						def qg = waitForQualityGate abortPipeline: true
-						echo "Quality Gate Status: ${qg.status}"
+				script{
+					try {
+						timeout(time: 2, unit: 'MINUTES') {
+							def qg = waitForQualityGate abortPipeline: true
+							echo "Quality Gate Status: ${qg.status}"
+						}
+					} catch (Exception e) {
+						echo "Quality Gate check failed: ${e}"
+						// Optional: add manual retry logic here
 					}
-				} catch (Exception e) {
-					echo "Quality Gate check failed: ${e}"
-					// Optional: add manual retry logic here
 				}
            	}
         }
