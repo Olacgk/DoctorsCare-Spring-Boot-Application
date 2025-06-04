@@ -44,7 +44,8 @@ pipeline {
                                     -Dsonar.sources=src/main/java \
                                     -Dsonar.tests=src/test/java \
                                     -Dsonar.junit.reportPaths=target/surefire-reports \
-                                    -Dsonar.token=$SONAR_TOKEN_SECURE
+                                    -Dsonar.token=$SONAR_TOKEN_SECURE \
+                                    -Dsonar.host.url=http://host.docker.internal:9000
                                 """
                             } else {
 								bat """
@@ -55,7 +56,8 @@ pipeline {
                                     -Dsonar.sources=src/main/java \
                                     -Dsonar.tests=src/test/java \
                                     -Dsonar.junit.reportPaths=target/surefire-reports \
-                                    -Dsonar.token=$SONAR_TOKEN_SECURE
+                                    -Dsonar.token=$SONAR_TOKEN_SECURE \
+                                    -Dsonar.host.url=http://host.docker.internal:9000
                                 """
                             }
                         }
@@ -68,10 +70,10 @@ pipeline {
 			steps {
 				script{
 					try {
-						timeout(time: 2, unit: 'MINUTES') {
-							def qg = waitForQualityGate abortPipeline: true
-							echo "Quality Gate Status: ${qg.status}"
-						}
+					timeout(time: 2, unit: 'MINUTES') {
+						def qg = waitForQualityGate abortPipeline: true
+						echo "Quality Gate Status: ${qg.status}"
+					}
 					} catch (Exception e) {
 						echo "Quality Gate check failed: ${e}"
 						// Optional: add manual retry logic here
