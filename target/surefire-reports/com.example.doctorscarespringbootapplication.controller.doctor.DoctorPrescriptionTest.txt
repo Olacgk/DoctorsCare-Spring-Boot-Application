@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.example.doctorscarespringbootapplication.controller.doctor.DoctorPrescriptionTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 1.843 s <<< FAILURE! - in com.example.doctorscarespringbootapplication.controller.doctor.DoctorPrescriptionTest
-testGivePrescriptionWithValidAppointmentId  Time elapsed: 0.352 s  <<< ERROR!
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 3.996 s <<< FAILURE! - in com.example.doctorscarespringbootapplication.controller.doctor.DoctorPrescriptionTest
+testGivePrescriptionWithValidAppointmentId  Time elapsed: 0.905 s  <<< ERROR!
 org.springframework.web.util.NestedServletException: Request processing failed; nested exception is org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "user.getDoctorsAdditionalInfo().getDegrees()" (template: "doctor/doctor_give_prescription" - line 35, col 38)
 	at com.example.doctorscarespringbootapplication.controller.doctor.DoctorPrescriptionTest.testGivePrescriptionWithValidAppointmentId(DoctorPrescriptionTest.java:58)
 Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "user.getDoctorsAdditionalInfo().getDegrees()" (template: "doctor/doctor_give_prescription" - line 35, col 38)
@@ -10,7 +10,7 @@ Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evalu
 Caused by: org.springframework.expression.spel.SpelEvaluationException: EL1011E: Method call: Attempted to call method getDegrees() on null context object
 	at com.example.doctorscarespringbootapplication.controller.doctor.DoctorPrescriptionTest.testGivePrescriptionWithValidAppointmentId(DoctorPrescriptionTest.java:58)
 
-testSavePrescriptionWithValidInput  Time elapsed: 0.08 s  <<< ERROR!
+testSavePrescriptionWithValidInput  Time elapsed: 0.299 s  <<< ERROR!
 org.springframework.web.util.NestedServletException: Request processing failed; nested exception is org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "user.getDoctorsAdditionalInfo().getDegrees()" (template: "doctor/doctor_give_prescription" - line 35, col 38)
 	at com.example.doctorscarespringbootapplication.controller.doctor.DoctorPrescriptionTest.testSavePrescriptionWithValidInput(DoctorPrescriptionTest.java:91)
 Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "user.getDoctorsAdditionalInfo().getDegrees()" (template: "doctor/doctor_give_prescription" - line 35, col 38)

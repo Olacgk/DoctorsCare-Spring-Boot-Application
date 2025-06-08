@@ -30,8 +30,8 @@ public class DoctorPrescription {
     public String givePrescription(@RequestParam String appointmentID, Model model, Principal principal) {
         model.addAttribute("title", "Give Prescription");
         model.addAttribute("appointmentID", appointmentID);
-        if (!appointmentID.equals("")) {
-            AppointDoctor appointDoctor = appointDoctorRepository.getById(Integer.parseInt(appointmentID));
+        if (!appointmentID.isEmpty()) {
+            AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(appointmentID));
             User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());
             model.addAttribute("patientUser", patientUser);
             DoctorGivePrescriptionDTO doctorGivePrescriptionDTO = new DoctorGivePrescriptionDTO();
@@ -55,8 +55,8 @@ public class DoctorPrescription {
         model.addAttribute("title", "Save Prescription");
         model.addAttribute("appointmentID", doctorGivePrescriptionDTO.getAppointmentID());
         model.addAttribute("doctorGivePrescriptionDTO", doctorGivePrescriptionDTO);
-        if (!doctorGivePrescriptionDTO.getAppointmentID().equals("")) {
-            AppointDoctor appointDoctor = appointDoctorRepository.getById(Integer.parseInt(doctorGivePrescriptionDTO.getAppointmentID()));
+        if (!doctorGivePrescriptionDTO.getAppointmentID().isEmpty()) {
+            AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(doctorGivePrescriptionDTO.getAppointmentID()));
             User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());
             Prescription prescription = new Prescription(doctorGivePrescriptionDTO.getSymptoms(), doctorGivePrescriptionDTO.getTests(), doctorGivePrescriptionDTO.getAdvice(), doctorGivePrescriptionDTO.getMedicines());
             prescription.setId(appointDoctor.getId());
