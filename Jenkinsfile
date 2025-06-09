@@ -115,32 +115,41 @@ pipeline {
 		stage('Run Spring Boot App') {
 			steps {
 				echo '🚀 Démarrage de l\'application Spring Boot'
-				if(isUnix()){
-					sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
-				}else {
-					bat 'start /B java -jar target\\*.jar'
+				script {
+					if (isUnix()) {
+						sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+					} else {
+						bat 'start /B java -jar target\\*.jar'
+					}
 				}
                 echo '⏳ Attente du démarrage'
-                isUnix() ? sh('sleep 20') : bat('timeout /T 20 >nul')
+                script {
+					if (isUnix()) {
+						sh 'sleep 20'
+					} else {
+						bat 'timeout /T 20 >nul'
+					}
+				}
             }
         }
 
         stage('Run OWASP ZAP Scan') {
 			steps {
 				echo '🛡️ Lancement de OWASP ZAP baseline scan'
-				if(isUnix()){
-					sh """
-						${ZAP_PATH} -cmd -quickurl ${TARGET_URL} \
-						-quickout ${ZAP_REPORT} \
-						-quickprogress \
-						-cmd
-					"""
-				}else {
-					bat """
-						${env.ZAP_PATH}\" -cmd -quickurl ${env.TARGET_URL} \
-						-quickout ${env.ZAP_REPORT} \
-						-quickprogress
-					"""
+				script {
+					if (isUnix()) {
+						sh """
+							"${ZAP_PATH}" -cmd -quickurl ${TARGET_URL} \
+							-quickout ${ZAP_REPORT} \
+							-quickprogress
+						"""
+					} else {
+						bat """
+							"${ZAP_PATH}" -cmd -quickurl ${TARGET_URL} ^
+							-quickout ${ZAP_REPORT} ^
+							-quickprogress
+						"""
+					}
 				}
             }
         }
@@ -163,7 +172,13 @@ pipeline {
 		always {
 			echo '📦 Pipeline terminé (succès ou échec).'
 			echo '🧹 Nettoyage - arrêt de l\'application Spring Boot'
-            isUnix() ? sh('pkill -f "target/.*.jar" || true') : bat('taskkill /F /IM java.exe || exit 0')
+			script {
+				if (isUnix()) {
+					sh 'pkill -f "target/.*.jar" || true'
+				} else {
+					bat 'taskkill /F /IM java.exe || exit 0'
+				}
+			}
 		}
 	}
 }
