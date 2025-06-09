@@ -116,22 +116,23 @@ pipeline {
 			steps {
 				echo '🚀 Démarrage de l\'application Spring Boot'
 				script {
-					if (isUnix()) {
-						sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+							if (isUnix()) {
+								sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
 					} else {
-						bat 'start /B java -jar target\\*.jar'
+								bat 'start /B java -jar target\\*.jar'
 					}
 				}
-                echo '⏳ Attente du démarrage'
-                script {
-					if (isUnix()) {
-						sh 'sleep 20'
+
+				echo '⏳ Attente du démarrage'
+				script {
+							if (isUnix()) {
+								sh 'sleep 20'
 					} else {
-						bat 'timeout /T 20 >nul'
+								bat 'timeout /T 20 /NOBREAK'
 					}
 				}
-            }
-        }
+			}
+		}
 
         stage('Run OWASP ZAP Scan') {
 			steps {
