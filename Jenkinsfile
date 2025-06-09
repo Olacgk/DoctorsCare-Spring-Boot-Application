@@ -9,6 +9,9 @@ pipeline {
     environment {
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
         SONAR_TOKEN = credentials('SonarQube_token')
+        ZAP_PATH = 'C:\\Program Files\\ZAP\\Zed Attack Proxy\\zap.bat'
+        ZAP_REPORT = 'zap-report.html'
+        TARGET_URL = 'http://localhost:8083'
     }
 
     stages {
@@ -108,6 +111,46 @@ pipeline {
 				}
 			}
 		}
+
+		stage('Run Spring Boot App') {
+			steps {
+				echo '🚀 Démarrage de l\'application Spring Boot'
+				if(isUnix()){
+					sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
+				}else {
+					bat 'start /B java -jar target\\*.jar'
+				}
+                echo '⏳ Attente du démarrage'
+                isUnix() ? sh('sleep 20') : bat('timeout /T 20 >nul')
+            }
+        }
+
+        stage('Run OWASP ZAP Scan') {
+			steps {
+				echo '🛡️ Lancement de OWASP ZAP baseline scan'
+				if(isUnix()){
+					sh """
+						${ZAP_PATH} -cmd -quickurl ${TARGET_URL} \
+						-quickout ${ZAP_REPORT} \
+						-quickprogress \
+						-cmd
+					"""
+				}else {
+					bat """
+						${env.ZAP_PATH}\" -cmd -quickurl ${env.TARGET_URL} \
+						-quickout ${env.ZAP_REPORT} \
+						-quickprogress
+					"""
+				}
+            }
+        }
+
+        stage('Archive ZAP Report') {
+			steps {
+				echo '📦 Archive du rapport ZAP'
+                archiveArtifacts artifacts: "${ZAP_REPORT}", onlyIfSuccessful: true
+            }
+        }
 	}
 
 	post {
@@ -119,6 +162,8 @@ pipeline {
 		}
 		always {
 			echo '📦 Pipeline terminé (succès ou échec).'
+			echo '🧹 Nettoyage - arrêt de l\'application Spring Boot'
+            isUnix() ? sh('pkill -f "target/.*.jar" || true') : bat('taskkill /F /IM java.exe || exit 0')
 		}
 	}
 }
