@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionInitiator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.configuration.commerz</a> &gt; <span class="el_source">TransactionInitiator.java</span></div><h1>TransactionInitiator.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.configuration.commerz;
+
+
+import com.example.doctorscarespringbootapplication.configuration.commerz.Utility.ParameterBuilder;
+
+import java.util.Map;
+
+/**
+ * This class initiates a transaction request to SSL Commerz
+ * required parameters to hit SSL Commerz payment page are constructed in a Map of String as key value pair
+ * Its method initTrnxnRequest returns JSON list or String with Session key which then used to select payment option
+ */
+<span class="nc" id="L13">public class TransactionInitiator {</span>
+    public String initTrnxnRequest() {
+<span class="nc" id="L15">        String response = &quot;&quot;;</span>
+        try {
+            /**
+             * All parameters in payment order should be constructed in this follwing postData Map
+             * keep an eye on success fail url correctly.
+             * insert your success and fail URL correctly in this Map
+             */
+<span class="nc" id="L22">            Map&lt;String, String&gt; postData = ParameterBuilder.constructRequestParameters();</span>
+            /**
+             * Provide your SSL Commerz store Id and Password by this following constructor.
+             * If Test Mode then insert true and false otherwise.
+             */
+<span class="nc" id="L27">            SSLCommerz sslcz = new SSLCommerz(&quot;docto62f28257d4314&quot;, &quot;docto62f28257d4314@ssl&quot;, true);</span>
+
+            /**
+             * If user want to get Gate way list then pass isGetGatewayList parameter as true
+             * If user want to get URL as returned response, pass false.
+             */
+<span class="nc" id="L33">            response = sslcz.initiateTransaction(postData, false);</span>
+<span class="nc" id="L34">            return response;</span>
+<span class="nc" id="L35">        } catch (Exception e) {</span>
+<span class="nc" id="L36">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L38">        return response;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

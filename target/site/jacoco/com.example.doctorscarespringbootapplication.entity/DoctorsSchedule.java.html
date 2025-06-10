@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoctorsSchedule.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.entity</a> &gt; <span class="el_source">DoctorsSchedule.java</span></div><h1>DoctorsSchedule.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.entity;
+
+import javax.persistence.*;
+
+@Entity
+public class DoctorsSchedule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _10_00;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _10_30;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _11_00;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _11_30;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _12_00;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _2_00;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _2_30;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _3_00;
+    @Column(columnDefinition = &quot;boolean default true&quot;)
+    private boolean _3_30;
+
+    @OneToOne
+    private User user;
+
+<span class="nc" id="L33">    public DoctorsSchedule() {</span>
+
+<span class="nc" id="L35">    }</span>
+
+<span class="nc" id="L37">    public DoctorsSchedule(int id, boolean _10_00, boolean _10_30, boolean _11_00, boolean _11_30, boolean _12_00, boolean _2_00, boolean _2_30, boolean _3_00, boolean _3_30, User user) {</span>
+<span class="nc" id="L38">        this.id = id;</span>
+<span class="nc" id="L39">        this._10_00 = _10_00;</span>
+<span class="nc" id="L40">        this._10_30 = _10_30;</span>
+<span class="nc" id="L41">        this._11_00 = _11_00;</span>
+<span class="nc" id="L42">        this._11_30 = _11_30;</span>
+<span class="nc" id="L43">        this._12_00 = _12_00;</span>
+<span class="nc" id="L44">        this._2_00 = _2_00;</span>
+<span class="nc" id="L45">        this._2_30 = _2_30;</span>
+<span class="nc" id="L46">        this._3_00 = _3_00;</span>
+<span class="nc" id="L47">        this._3_30 = _3_30;</span>
+<span class="nc" id="L48">        this.user = user;</span>
+<span class="nc" id="L49">    }</span>
+
+<span class="nc" id="L51">    public DoctorsSchedule(boolean _10_00, boolean _10_30, boolean _11_00, boolean _11_30, boolean _12_00, boolean _2_00, boolean _2_30, boolean _3_00, boolean _3_30, User user) {</span>
+<span class="nc" id="L52">        this._10_00 = _10_00;</span>
+<span class="nc" id="L53">        this._10_30 = _10_30;</span>
+<span class="nc" id="L54">        this._11_00 = _11_00;</span>
+<span class="nc" id="L55">        this._11_30 = _11_30;</span>
+<span class="nc" id="L56">        this._12_00 = _12_00;</span>
+<span class="nc" id="L57">        this._2_00 = _2_00;</span>
+<span class="nc" id="L58">        this._2_30 = _2_30;</span>
+<span class="nc" id="L59">        this._3_00 = _3_00;</span>
+<span class="nc" id="L60">        this._3_30 = _3_30;</span>
+<span class="nc" id="L61">        this.user = user;</span>
+<span class="nc" id="L62">    }</span>
+
+<span class="nc" id="L64">    public DoctorsSchedule(boolean _10_00, boolean _10_30, boolean _11_00, boolean _11_30, boolean _12_00, boolean _2_00, boolean _2_30, boolean _3_00, boolean _3_30) {</span>
+<span class="nc" id="L65">        this._10_00 = _10_00;</span>
+<span class="nc" id="L66">        this._10_30 = _10_30;</span>
+<span class="nc" id="L67">        this._11_00 = _11_00;</span>
+<span class="nc" id="L68">        this._11_30 = _11_30;</span>
+<span class="nc" id="L69">        this._12_00 = _12_00;</span>
+<span class="nc" id="L70">        this._2_00 = _2_00;</span>
+<span class="nc" id="L71">        this._2_30 = _2_30;</span>
+<span class="nc" id="L72">        this._3_00 = _3_00;</span>
+<span class="nc" id="L73">        this._3_30 = _3_30;</span>
+<span class="nc" id="L74">    }</span>
+
+    public int getId() {
+<span class="nc" id="L77">        return id;</span>
+    }
+
+    public void setId(int id) {
+<span class="nc" id="L81">        this.id = id;</span>
+<span class="nc" id="L82">    }</span>
+
+    public User getUser() {
+<span class="nc" id="L85">        return user;</span>
+    }
+
+    public void setUser(User user) {
+<span class="nc" id="L89">        this.user = user;</span>
+<span class="nc" id="L90">    }</span>
+
+    public boolean is_10_00() {
+<span class="nc" id="L93">        return _10_00;</span>
+    }
+
+    public void set_10_00(boolean _10_00) {
+<span class="nc" id="L97">        this._10_00 = _10_00;</span>
+<span class="nc" id="L98">    }</span>
+
+    public boolean is_10_30() {
+<span class="nc" id="L101">        return _10_30;</span>
+    }
+
+    public void set_10_30(boolean _10_30) {
+<span class="nc" id="L105">        this._10_30 = _10_30;</span>
+<span class="nc" id="L106">    }</span>
+
+    public boolean is_11_00() {
+<span class="nc" id="L109">        return _11_00;</span>
+    }
+
+    public void set_11_00(boolean _11_00) {
+<span class="nc" id="L113">        this._11_00 = _11_00;</span>
+<span class="nc" id="L114">    }</span>
+
+    public boolean is_11_30() {
+<span class="nc" id="L117">        return _11_30;</span>
+    }
+
+    public void set_11_30(boolean _11_30) {
+<span class="nc" id="L121">        this._11_30 = _11_30;</span>
+<span class="nc" id="L122">    }</span>
+
+    public boolean is_12_00() {
+<span class="nc" id="L125">        return _12_00;</span>
+    }
+
+    public void set_12_00(boolean _12_00) {
+<span class="nc" id="L129">        this._12_00 = _12_00;</span>
+<span class="nc" id="L130">    }</span>
+
+    public boolean is_2_00() {
+<span class="nc" id="L133">        return _2_00;</span>
+    }
+
+    public void set_2_00(boolean _2_00) {
+<span class="nc" id="L137">        this._2_00 = _2_00;</span>
+<span class="nc" id="L138">    }</span>
+
+    public boolean is_2_30() {
+<span class="nc" id="L141">        return _2_30;</span>
+    }
+
+    public void set_2_30(boolean _2_30) {
+<span class="nc" id="L145">        this._2_30 = _2_30;</span>
+<span class="nc" id="L146">    }</span>
+
+    public boolean is_3_00() {
+<span class="nc" id="L149">        return _3_00;</span>
+    }
+
+    public void set_3_00(boolean _3_00) {
+<span class="nc" id="L153">        this._3_00 = _3_00;</span>
+<span class="nc" id="L154">    }</span>
+
+    public boolean is_3_30() {
+<span class="nc" id="L157">        return _3_30;</span>
+    }
+
+    public void set_3_30(boolean _3_30) {
+<span class="nc" id="L161">        this._3_30 = _3_30;</span>
+<span class="nc" id="L162">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L166">        return &quot;DoctorsSchedule{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, _10_00=&quot; + _10_00 +
+                &quot;, _10_30=&quot; + _10_30 +
+                &quot;, _11_00=&quot; + _11_00 +
+                &quot;, _11_30=&quot; + _11_30 +
+                &quot;, _12_00=&quot; + _12_00 +
+                &quot;, _2_00=&quot; + _2_00 +
+                &quot;, _2_30=&quot; + _2_30 +
+                &quot;, _3_00=&quot; + _3_00 +
+                &quot;, _3_30=&quot; + _3_30 +
+//                &quot;, user=&quot; + user +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

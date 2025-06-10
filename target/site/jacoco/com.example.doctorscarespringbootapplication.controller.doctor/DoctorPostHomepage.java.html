@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoctorPostHomepage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.controller.doctor</a> &gt; <span class="el_source">DoctorPostHomepage.java</span></div><h1>DoctorPostHomepage.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.controller.doctor;
+
+import com.example.doctorscarespringbootapplication.controller.patient.PatientDoctorsTIps;
+import com.example.doctorscarespringbootapplication.dao.*;
+import com.example.doctorscarespringbootapplication.dto.*;
+import com.example.doctorscarespringbootapplication.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static com.example.doctorscarespringbootapplication.controller.patient.PatientDoctorsTIps.*;
+
+@Controller
+@RequestMapping(&quot;/doctor&quot;)
+<span class="fc" id="L29">public class DoctorPostHomepage {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PostsRepository postsRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
+
+    @Autowired
+    private CommentsRepository commentsRepository;
+
+    @Autowired
+    private SavedPostsRepository savedPostsRepository;
+
+    @GetMapping(&quot;/post-homepage/{page}&quot;)
+    public String postHomepage(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="fc" id="L48">        model.addAttribute(&quot;title&quot;, &quot;Doctor Tips Homepage&quot;);</span>
+<span class="fc" id="L49">        Pageable pageable = PageRequest.of(page - 1, 5);</span>
+<span class="fc" id="L50">        Page&lt;Posts&gt; postsList = postsRepository.findAllByOrderByIdDesc(pageable);</span>
+<span class="fc" id="L51">        model.addAttribute(&quot;postsList&quot;, postsList);</span>
+<span class="fc" id="L52">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="fc" id="L53">        model.addAttribute(&quot;totalPages&quot;, postsList.getTotalPages());</span>
+<span class="fc" id="L54">        addCommonData(model, principal);</span>
+<span class="fc" id="L55">        return &quot;doctor/doctor_post_homepage&quot;;</span>
+    }
+
+    @PostMapping(&quot;/do-post-homepage&quot;)
+    public String doPostHomepage(@ModelAttribute Posts posts, @RequestParam String doctorID, Model model, Principal principal) {
+
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (!posts.getCoverPhoto().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L62">            DateTimeFormatter postDateFormat = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L63">            DateTimeFormatter postTimeFormat = DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;);</span>
+
+<span class="nc" id="L65">            LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="nc" id="L66">            Date postDate = Date.valueOf(postDateFormat.format(localDateTime));</span>
+<span class="nc" id="L67">            Time postTime = Time.valueOf(postTimeFormat.format(localDateTime));</span>
+
+<span class="nc" id="L69">            posts.setPostDate(postDate);</span>
+<span class="nc" id="L70">            posts.setPostTime(postTime);</span>
+
+<span class="nc" id="L72">            User doctorUser = userRepository.findById(Integer.parseInt(doctorID));</span>
+<span class="nc" id="L73">            List&lt;Posts&gt; postsList = postsRepository.findByUserId(Integer.parseInt(doctorID));</span>
+<span class="nc" id="L74">            posts.setUser(doctorUser);</span>
+<span class="nc" id="L75">            postsList.add(posts);</span>
+<span class="nc" id="L76">            doctorUser.setPosts(postsList);</span>
+<span class="nc" id="L77">            postsRepository.save(posts);</span>
+<span class="nc" id="L78">            model.addAttribute(&quot;posted&quot;, true);</span>
+<span class="nc" id="L79">            return &quot;redirect:/doctor/post-homepage/1&quot;;</span>
+        } else {
+<span class="nc" id="L81">            model.addAttribute(&quot;posted&quot;, false);</span>
+        }
+<span class="nc" id="L83">        model.addAttribute(&quot;title&quot;, &quot;Doctor Tips Homepage&quot;);</span>
+<span class="nc" id="L84">        Pageable pageable = PageRequest.of(0, 5);</span>
+<span class="nc" id="L85">        Page&lt;Posts&gt; postsListSelect = postsRepository.findAllByOrderByIdDesc(pageable);</span>
+<span class="nc" id="L86">        System.out.println(&quot;Total Post = &quot; + postsListSelect.getTotalElements());</span>
+<span class="nc" id="L87">        model.addAttribute(&quot;postsListSize&quot;, postsListSelect.getTotalElements());</span>
+<span class="nc" id="L88">        model.addAttribute(&quot;postsList&quot;, postsListSelect);</span>
+<span class="nc" id="L89">        model.addAttribute(&quot;currentPage&quot;, 1);</span>
+<span class="nc" id="L90">        model.addAttribute(&quot;totalPages&quot;, postsListSelect.getTotalPages());</span>
+<span class="nc" id="L91">        addCommonData(model, principal);</span>
+<span class="nc" id="L92">        return &quot;doctor/doctor_post_homepage&quot;;</span>
+    }
+
+
+    @PostMapping(&quot;/process-like&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doLikePost(@RequestBody LikesDTO likesDTO, Model model, Principal principal) {
+<span class="nc" id="L99">        return getObjectResponseEntityLike(likesDTO, likesRepository, postsRepository);</span>
+    }
+
+    @PostMapping(&quot;/process-comment&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doCommentPost(@RequestBody CommentsDTO commentsDTO, Model model, Principal principal) {
+<span class="nc" id="L105">        return getObjectResponseEntityComment(commentsDTO, postsRepository, this.commentsRepository);</span>
+    }
+
+    public static ResponseEntity&lt;Object&gt; getObjectResponseEntityComment(@RequestBody CommentsDTO commentsDTO, PostsRepository postsRepository, CommentsRepository commentsRepository) {
+<span class="nc" id="L109">        Posts posts = postsRepository.findById(Integer.parseInt(commentsDTO.getPostId()));</span>
+<span class="nc" id="L110">        List&lt;Comments&gt; commentsList = commentsRepository.findByPostsId(Integer.parseInt(commentsDTO.getPostId()));</span>
+<span class="nc" id="L111">        commentsList.add(new Comments(commentsDTO.getCommenterId(), commentsDTO.getCommenterName(), commentsDTO.getCommenterImage(), commentsDTO.getComment(), posts));</span>
+<span class="nc" id="L112">        posts.setCommentsList(commentsList);</span>
+<span class="nc" id="L113">        postsRepository.save(posts);</span>
+<span class="nc" id="L114">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, commentsList.size() + &quot;&quot;);</span>
+<span class="nc" id="L115">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+    @PostMapping(&quot;/process-savepost&quot;)
+    public ResponseEntity&lt;Object&gt; doSavePost(@RequestBody SavedPostsDTO savedPostsDTO, Model model, Principal principal) {
+<span class="nc" id="L120">        return getObjectResponseEntitySavePost(savedPostsDTO, postsRepository, savedPostsRepository);</span>
+    }
+
+    @PostMapping(&quot;/process-deletepost&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doDeletePost(@RequestBody DeletePostDTO deletePostDTO, Model model, Principal principal) {
+<span class="nc" id="L126">        postsRepository.deleteById(Integer.parseInt(deletePostDTO.getPostId()));</span>
+<span class="nc" id="L127">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Deleted Successfully!&quot;);</span>
+<span class="nc" id="L128">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+    @PostMapping(&quot;/process-unsavepost&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doUnsavePost(@RequestBody UnsavePostDTO unsavePostDTO, Model model, Principal principal) {
+<span class="nc" id="L134">        return getObjectResponseEntityUnsavePost(unsavePostDTO, savedPostsRepository);</span>
+    }
+
+    @PostMapping(&quot;/edit-post&quot;)
+    public String editPost(@RequestParam(&quot;postId&quot;) String postId, Model model, Principal principal) {
+<span class="nc" id="L139">        Posts post = postsRepository.findById(Integer.parseInt(postId));</span>
+<span class="nc" id="L140">        model.addAttribute(&quot;post&quot;, post);</span>
+<span class="nc" id="L141">        addCommonData(model, principal);</span>
+<span class="nc" id="L142">        return &quot;doctor/doctor_edit_post&quot;;</span>
+    }
+
+    @PostMapping(&quot;/process-save-editedpost&quot;)
+    public String saveEditedPost(@RequestParam(&quot;postId&quot;) String postId, @RequestParam(&quot;postContent&quot;) String postContent, Model model, Principal principal) {
+<span class="nc" id="L147">        model.addAttribute(&quot;title&quot;, &quot;Doctor Tips Homepage&quot;);</span>
+<span class="nc" id="L148">        Posts post = postsRepository.findById(Integer.parseInt(postId));</span>
+<span class="nc" id="L149">        post.setPostContent(postContent);</span>
+<span class="nc" id="L150">        postsRepository.save(post);</span>
+<span class="nc" id="L151">        model.addAttribute(&quot;postsaved&quot;, &quot;true&quot;);</span>
+<span class="nc" id="L152">        List&lt;Posts&gt; postsList = postsRepository.findAll();</span>
+<span class="nc" id="L153">        model.addAttribute(&quot;postsList&quot;, postsList);</span>
+<span class="nc" id="L154">        addCommonData(model, principal);</span>
+<span class="nc" id="L155">        return &quot;redirect:/doctor/post-homepage/1&quot;;</span>
+    }
+
+    @GetMapping(&quot;/saved-tips-posts/{page}&quot;)
+    public String savedTipsPosts(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L160">        model.addAttribute(&quot;title&quot;, &quot;Doctor Saved Tips&quot;);</span>
+<span class="nc" id="L161">        model.addAttribute(&quot;postsaved&quot;, &quot;true&quot;);</span>
+<span class="nc" id="L162">        String userEmail = principal.getName();</span>
+<span class="nc" id="L163">        User user = userRepository.getUserByEmailNative(userEmail);</span>
+<span class="nc" id="L164">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L165">        Pageable pageable = PageRequest.of(page - 1, 5);</span>
+<span class="nc" id="L166">        Page&lt;SavedPosts&gt; savedPostsList = savedPostsRepository.findBySaverId(user.getId() + &quot;&quot;, pageable);</span>
+<span class="nc" id="L167">        System.out.println(savedPostsList);</span>
+<span class="nc" id="L168">        model.addAttribute(&quot;postsListLength&quot;, savedPostsList.getTotalElements());</span>
+<span class="nc" id="L169">        model.addAttribute(&quot;postsList&quot;, savedPostsList);</span>
+<span class="nc" id="L170">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L171">        model.addAttribute(&quot;totalPages&quot;, savedPostsList.getTotalPages());</span>
+<span class="nc" id="L172">        return &quot;doctor/doctor_saved_tips&quot;;</span>
+    }
+
+    @ModelAttribute
+    public void addCommonData(Model model, Principal principal) {
+<span class="fc" id="L177">        String userEmail = principal.getName();</span>
+<span class="fc" id="L178">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
+<span class="fc" id="L179">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="fc" id="L180">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

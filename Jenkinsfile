@@ -116,11 +116,8 @@ pipeline {
 			steps {
 				echo '🚀 Démarrage de l\'application Spring Boot'
 				script {
-							if (isUnix()) {
-								sh 'nohup java -jar target/*.jar > app.log 2>&1 &'
-					} else {
-								bat 'start /B java -jar target\\*.jar'
-					}
+					def startCmd = 'mvn spring-boot:run'
+					isUnix() ? sh(startCmd) : bat(startCmd)
 				}
 
 				echo '⏳ Attente du démarrage'

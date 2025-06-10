@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminEarnings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.controller.admin</a> &gt; <span class="el_source">AdminEarnings.java</span></div><h1>AdminEarnings.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.controller.admin;
+
+import com.example.doctorscarespringbootapplication.dao.*;
+import com.example.doctorscarespringbootapplication.entity.AppointDoctor;
+import com.example.doctorscarespringbootapplication.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.security.Principal;
+import java.sql.Date;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@Controller
+@RequestMapping(&quot;/admin&quot;)
+<span class="nc" id="L25">public class AdminEarnings {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AdditionalDoctorsRepository additionalDoctorsRepository;
+    @Autowired
+    private AppointDoctorRepository appointDoctorRepository;
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private PostsRepository postsRepository;
+
+    @Autowired
+    private SavedPostsRepository savedPostsRepository;
+
+    @GetMapping(&quot;/earnings&quot;)
+    public String earnings(Model model, Principal principal) {
+<span class="nc" id="L46">        model.addAttribute(&quot;title&quot;, &quot;Earnings&quot;);</span>
+<span class="nc" id="L47">        addCommonData(model, principal);</span>
+
+        //        Income Short Stats 4 Cards
+<span class="nc" id="L50">        String totalEarnings = appointDoctorRepository.sumAllAppointEarningNative();</span>
+<span class="nc" id="L51">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+
+<span class="nc" id="L53">        LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="nc" id="L54">        String dateToday = localDateTime.format(dateTimeFormatter);</span>
+<span class="nc" id="L55">        String totalEarnToday = appointDoctorRepository.sumTodaysEarning(Date.valueOf(dateToday));</span>
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        if (totalEarnToday != null &amp;&amp; totalEarnings != null) {</span>
+<span class="nc" id="L57">            double earnUpdriftPercent = (Double.parseDouble(totalEarnToday) / Double.parseDouble(totalEarnings)) * 100;</span>
+<span class="nc" id="L58">            DecimalFormat dec = new DecimalFormat(&quot;#0.00&quot;);</span>
+<span class="nc" id="L59">            String earnUpDriftPercentString = dec.format(earnUpdriftPercent) + &quot;%&quot;;</span>
+<span class="nc" id="L60">            model.addAttribute(&quot;totalEarnUpdrift&quot;, earnUpDriftPercentString);</span>
+<span class="nc" id="L61">        } else {</span>
+<span class="nc" id="L62">            model.addAttribute(&quot;totalEarnUpdrift&quot;, &quot;0.00%&quot;);</span>
+        }
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (totalEarnings != null) {</span>
+<span class="nc" id="L65">            model.addAttribute(&quot;totalEarnings&quot;, totalEarnings);</span>
+        } else {
+<span class="nc" id="L67">            model.addAttribute(&quot;totalEarnings&quot;, &quot;0.00&quot;);</span>
+        }
+
+
+<span class="nc" id="L71">        LocalDateTime yesterdayDate = localDateTime.minusDays(1);</span>
+<span class="nc" id="L72">        String yesterdayDateFormatted = yesterdayDate.format(dateTimeFormatter);</span>
+<span class="nc" id="L73">        String totalEarnYesterday = appointDoctorRepository.sumTodaysEarning(Date.valueOf(yesterdayDateFormatted));</span>
+<span class="nc bnc" id="L74" title="All 4 branches missed.">        if (totalEarnYesterday != null &amp;&amp; totalEarnToday != null) {</span>
+<span class="nc" id="L75">            double earnUpdriftPercent = (Double.parseDouble(totalEarnToday) / Double.parseDouble(totalEarnYesterday)) * 100;</span>
+<span class="nc" id="L76">            DecimalFormat dec = new DecimalFormat(&quot;#0.00&quot;);</span>
+<span class="nc" id="L77">            String earnUpDriftPercentString = dec.format(earnUpdriftPercent) + &quot;%&quot;;</span>
+<span class="nc" id="L78">            model.addAttribute(&quot;totalEarnTodayUpdrift&quot;, earnUpDriftPercentString);</span>
+<span class="nc" id="L79">        } else {</span>
+<span class="nc" id="L80">            model.addAttribute(&quot;totalEarnTodayUpdrift&quot;, &quot;0.00%&quot;);</span>
+        }
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (totalEarnToday != null) {</span>
+<span class="nc" id="L83">            model.addAttribute(&quot;totalEarnToday&quot;, totalEarnToday);</span>
+        } else {
+<span class="nc" id="L85">            model.addAttribute(&quot;totalEarnToday&quot;, &quot;0.00&quot;);</span>
+        }
+
+<span class="nc" id="L88">        LocalDateTime weeklyStartingDate = localDateTime.minusDays(7);</span>
+<span class="nc" id="L89">        String weeklyStartingDateFormatted = weeklyStartingDate.format(dateTimeFormatter);</span>
+<span class="nc" id="L90">        String totalEarnWeekly = appointDoctorRepository.sumWeeklyEarningNative(Date.valueOf(weeklyStartingDateFormatted), Date.valueOf(dateToday));</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">        if (totalEarnWeekly != null &amp;&amp; totalEarnToday != null) {</span>
+<span class="nc" id="L92">            double earnUpdriftPercent = (Double.parseDouble(totalEarnToday) / Double.parseDouble(totalEarnWeekly)) * 100;</span>
+<span class="nc" id="L93">            DecimalFormat dec = new DecimalFormat(&quot;#0.00&quot;);</span>
+<span class="nc" id="L94">            String earnUpDriftPercentString = dec.format(earnUpdriftPercent) + &quot;%&quot;;</span>
+<span class="nc" id="L95">            model.addAttribute(&quot;totalEarnWeeklyUpdrift&quot;, earnUpDriftPercentString);</span>
+<span class="nc" id="L96">        } else {</span>
+<span class="nc" id="L97">            model.addAttribute(&quot;totalEarnWeeklyUpdrift&quot;, &quot;0.00%&quot;);</span>
+        }
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (totalEarnWeekly != null) {</span>
+<span class="nc" id="L100">            model.addAttribute(&quot;totalEarnWeekly&quot;, totalEarnWeekly);</span>
+        } else {
+<span class="nc" id="L102">            model.addAttribute(&quot;totalEarnWeekly&quot;, &quot;0.00&quot;);</span>
+        }
+
+<span class="nc" id="L105">        LocalDateTime monthlyStartingDate = localDateTime.minusDays(30);</span>
+<span class="nc" id="L106">        String monthlyStartingDateFormatted = monthlyStartingDate.format(dateTimeFormatter);</span>
+<span class="nc" id="L107">        String totalEarnMonthly = appointDoctorRepository.sumWeeklyEarningNative(Date.valueOf(monthlyStartingDateFormatted), Date.valueOf(dateToday));</span>
+<span class="nc bnc" id="L108" title="All 4 branches missed.">        if (totalEarnMonthly != null &amp;&amp; totalEarnToday != null) {</span>
+<span class="nc" id="L109">            double earnUpdriftPercent = (Double.parseDouble(totalEarnToday) / Double.parseDouble(totalEarnMonthly)) * 100;</span>
+<span class="nc" id="L110">            DecimalFormat dec = new DecimalFormat(&quot;#0.00&quot;);</span>
+<span class="nc" id="L111">            String earnUpDriftPercentString = dec.format(earnUpdriftPercent) + &quot;%&quot;;</span>
+<span class="nc" id="L112">            model.addAttribute(&quot;totalEarnMonthlyUpdrift&quot;, earnUpDriftPercentString);</span>
+<span class="nc" id="L113">        } else {</span>
+<span class="nc" id="L114">            model.addAttribute(&quot;totalEarnMonthlyUpdrift&quot;, &quot;0.00%&quot;);</span>
+        }
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (totalEarnMonthly != null) {</span>
+<span class="nc" id="L117">            model.addAttribute(&quot;totalEarnMonthly&quot;, totalEarnMonthly);</span>
+        } else {
+<span class="nc" id="L119">            model.addAttribute(&quot;totalEarnMonthly&quot;, &quot;0.00&quot;);</span>
+        }
+
+
+//        Recent Appointment Table
+<span class="nc" id="L124">        Pageable pageable = PageRequest.of(0, 5);</span>
+<span class="nc" id="L125">        Page&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository.findAllByOrderByIdDesc(pageable);</span>
+<span class="nc" id="L126">        model.addAttribute(&quot;appointDoctorList&quot;, appointDoctorList);</span>
+
+
+//        User by role chart
+<span class="nc" id="L130">        int totalUser = (int) userRepository.count();</span>
+<span class="nc" id="L131">        int patientTotalUser = (int) userRepository.countByRole(&quot;ROLE_PATIENT&quot;);</span>
+<span class="nc" id="L132">        int doctorTotalUser = (int) userRepository.countByRole(&quot;ROLE_DOCTOR&quot;);</span>
+<span class="nc" id="L133">        int adminTotalUser = (int) userRepository.countByRole(&quot;ROLE_ADMIN&quot;);</span>
+
+<span class="nc" id="L135">        DecimalFormat dec = new DecimalFormat(&quot;#0.0&quot;);</span>
+        //        Patient
+<span class="nc" id="L137">        double patientUserPercent = patientTotalUser / (double) totalUser * 100.0;</span>
+<span class="nc" id="L138">        String patientUserPercentFormatted = dec.format(patientUserPercent);</span>
+<span class="nc" id="L139">        model.addAttribute(&quot;patientUserPercent&quot;, patientUserPercentFormatted);</span>
+        //        Doctor
+<span class="nc" id="L141">        double doctorUserPercent = doctorTotalUser / (double) totalUser * 100.0;</span>
+<span class="nc" id="L142">        String doctorUserPercentFormatted = dec.format(doctorUserPercent);</span>
+<span class="nc" id="L143">        model.addAttribute(&quot;doctorUserPercent&quot;, doctorUserPercentFormatted);</span>
+        //        Admin
+<span class="nc" id="L145">        double adminUserPercent = adminTotalUser / (double) totalUser * 100.0;</span>
+<span class="nc" id="L146">        String adminUserPercentFormatted = dec.format(adminUserPercent);</span>
+<span class="nc" id="L147">        model.addAttribute(&quot;adminUserPercent&quot;, adminUserPercentFormatted);</span>
+
+
+        // Doctor Type Percent Chart
+<span class="nc" id="L151">        int totalDoctor = (int) additionalDoctorsRepository.count();</span>
+<span class="nc" id="L152">        int pediatricsTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Pediatrics&quot;);</span>
+<span class="nc" id="L153">        int skinTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Skin&quot;);</span>
+<span class="nc" id="L154">        int medicineTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Medicine&quot;);</span>
+<span class="nc" id="L155">        int covidSupportTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Covid Support&quot;);</span>
+<span class="nc" id="L156">        int mentalHealthTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Mental Health&quot;);</span>
+<span class="nc" id="L157">        int urologyTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Urology&quot;);</span>
+<span class="nc" id="L158">        int eyeTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Eye&quot;);</span>
+<span class="nc" id="L159">        int cardiologyTotalDoctor = additionalDoctorsRepository.countByDoctortype(&quot;Cardiology&quot;);</span>
+
+        //        Pediatrics
+<span class="nc" id="L162">        double pediatricsDoctorPercent = pediatricsTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L163">        String pediatricsDoctorPercentFormatted = dec.format(pediatricsDoctorPercent);</span>
+<span class="nc" id="L164">        model.addAttribute(&quot;pediatricsDoctorPercent&quot;, pediatricsDoctorPercentFormatted);</span>
+        //        Skin
+<span class="nc" id="L166">        double skinDoctorPercent = skinTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L167">        String skinDoctorPercentFormatted = dec.format(skinDoctorPercent);</span>
+<span class="nc" id="L168">        model.addAttribute(&quot;skinDoctorPercent&quot;, skinDoctorPercentFormatted);</span>
+        //        Medicine
+<span class="nc" id="L170">        double medicineDoctorPercent = medicineTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L171">        String medicineDoctorPercentFormatted = dec.format(medicineDoctorPercent);</span>
+<span class="nc" id="L172">        model.addAttribute(&quot;medicineDoctorPercent&quot;, medicineDoctorPercentFormatted);</span>
+        //        Covid Support
+<span class="nc" id="L174">        double covidSupportDoctorPercent = covidSupportTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L175">        String covidSupportDoctorPercentFormatted = dec.format(covidSupportDoctorPercent);</span>
+<span class="nc" id="L176">        model.addAttribute(&quot;covidSupportDoctorPercent&quot;, covidSupportDoctorPercentFormatted);</span>
+        //        Mental Health
+<span class="nc" id="L178">        double mentalHealthDoctorPercent = mentalHealthTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L179">        String mentalHealthDoctorPercentFormatted = dec.format(mentalHealthDoctorPercent);</span>
+<span class="nc" id="L180">        model.addAttribute(&quot;mentalHealthDoctorPercent&quot;, mentalHealthDoctorPercentFormatted);</span>
+        //        Urology
+<span class="nc" id="L182">        double urologyDoctorPercent = urologyTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L183">        String urologyDoctorPercentFormatted = dec.format(urologyDoctorPercent);</span>
+<span class="nc" id="L184">        model.addAttribute(&quot;urologyDoctorPercent&quot;, urologyDoctorPercentFormatted);</span>
+        //        Eye
+<span class="nc" id="L186">        double eyeDoctorPercent = eyeTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L187">        String eyeDoctorPercentFormatted = dec.format(eyeDoctorPercent);</span>
+<span class="nc" id="L188">        model.addAttribute(&quot;eyeDoctorPercent&quot;, eyeDoctorPercentFormatted);</span>
+        //        Cardiology
+<span class="nc" id="L190">        double cardiologyDoctorPercent = cardiologyTotalDoctor / (double) totalDoctor * 100.0;</span>
+<span class="nc" id="L191">        String cardiologyDoctorPercentFormatted = dec.format(cardiologyDoctorPercent);</span>
+<span class="nc" id="L192">        model.addAttribute(&quot;cardiologyDoctorPercent&quot;, cardiologyDoctorPercentFormatted);</span>
+
+        // Earning Chart By Month
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        String januaryEarn = appointDoctorRepository.sumEarnByMonthNative(1) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(1);</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        String februaryEarn = appointDoctorRepository.sumEarnByMonthNative(2) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(2);</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        String marchEarn = appointDoctorRepository.sumEarnByMonthNative(3) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(3);</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        String aprilEarn = appointDoctorRepository.sumEarnByMonthNative(4) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(4);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        String mayEarn = appointDoctorRepository.sumEarnByMonthNative(5) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(5);</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        String juneEarn = appointDoctorRepository.sumEarnByMonthNative(6) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(6);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        String julyEarn = appointDoctorRepository.sumEarnByMonthNative(7) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(7);</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        String augustEarn = appointDoctorRepository.sumEarnByMonthNative(8) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(8);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        String septemberEarn = appointDoctorRepository.sumEarnByMonthNative(9) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(9);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        String octoberEarn = appointDoctorRepository.sumEarnByMonthNative(10) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(10);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        String novemberEarn = appointDoctorRepository.sumEarnByMonthNative(11) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(11);</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        String decemberEarn = appointDoctorRepository.sumEarnByMonthNative(12) == null ? &quot;0&quot; : appointDoctorRepository.sumEarnByMonthNative(12);</span>
+
+<span class="nc" id="L208">        model.addAttribute(&quot;januaryEarn&quot;, januaryEarn);</span>
+<span class="nc" id="L209">        model.addAttribute(&quot;februaryEarn&quot;, februaryEarn);</span>
+<span class="nc" id="L210">        model.addAttribute(&quot;marchEarn&quot;, marchEarn);</span>
+<span class="nc" id="L211">        model.addAttribute(&quot;aprilEarn&quot;, aprilEarn);</span>
+<span class="nc" id="L212">        model.addAttribute(&quot;mayEarn&quot;, mayEarn);</span>
+<span class="nc" id="L213">        model.addAttribute(&quot;juneEarn&quot;, juneEarn);</span>
+<span class="nc" id="L214">        model.addAttribute(&quot;julyEarn&quot;, julyEarn);</span>
+<span class="nc" id="L215">        model.addAttribute(&quot;augustEarn&quot;, augustEarn);</span>
+<span class="nc" id="L216">        model.addAttribute(&quot;septemberEarn&quot;, septemberEarn);</span>
+<span class="nc" id="L217">        model.addAttribute(&quot;octoberEarn&quot;, octoberEarn);</span>
+<span class="nc" id="L218">        model.addAttribute(&quot;novemberEarn&quot;, novemberEarn);</span>
+<span class="nc" id="L219">        model.addAttribute(&quot;decemberEarn&quot;, decemberEarn);</span>
+
+
+<span class="nc" id="L222">        return &quot;admin/admin_earnings&quot;;</span>
+    }
+
+    @ModelAttribute
+    public void addCommonData(Model model, Principal principal) {
+<span class="nc" id="L227">        String userEmail = principal.getName();</span>
+<span class="nc" id="L228">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
+<span class="nc" id="L229">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L230">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

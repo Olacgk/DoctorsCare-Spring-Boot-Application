@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HomeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.controller</a> &gt; <span class="el_source">HomeController.java</span></div><h1>HomeController.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.controller;
+
+import com.example.doctorscarespringbootapplication.configuration.emailSender.EmailSenderServiceJava;
+import com.example.doctorscarespringbootapplication.dao.AccountActiveTokenRepository;
+import com.example.doctorscarespringbootapplication.dao.AppointDoctorRepository;
+import com.example.doctorscarespringbootapplication.dao.PrescriptionRepository;
+import com.example.doctorscarespringbootapplication.dao.UserRepository;
+import com.example.doctorscarespringbootapplication.dto.DoctorSignup;
+import com.example.doctorscarespringbootapplication.entity.AccountActiveToken;
+import com.example.doctorscarespringbootapplication.entity.DoctorsAdditionalInfo;
+import com.example.doctorscarespringbootapplication.entity.DoctorsSchedule;
+import com.example.doctorscarespringbootapplication.entity.User;
+import com.example.doctorscarespringbootapplication.configuration.commerz.SSLCommerz;
+import com.example.doctorscarespringbootapplication.configuration.commerz.Utility.ParameterBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+
+@Controller
+<span class="fc" id="L35">public class HomeController {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AppointDoctorRepository appointDoctorRepository;
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private EmailSenderServiceJava emailSenderServiceJava;
+
+    @Autowired
+    private AccountActiveTokenRepository accountActiveTokenRepository;
+
+    @GetMapping(&quot;/&quot;)
+    public String home(Model model) {
+<span class="fc" id="L54">        model.addAttribute(&quot;title&quot;, &quot;Doctors Care | Home&quot;);</span>
+<span class="fc" id="L55">        return &quot;index.html&quot;;</span>
+    }
+
+
+    @GetMapping(&quot;/terms-and-conditions&quot;)
+    public String termsAndConditions(Model model) {
+<span class="fc" id="L61">        model.addAttribute(&quot;title&quot;, &quot;Terms &amp; Conditions&quot;);</span>
+<span class="fc" id="L62">        return &quot;terms-and-conditions.html&quot;;</span>
+    }
+
+    @GetMapping(&quot;/patient-signup&quot;)
+    public String patientSignup(Model model) {
+<span class="fc" id="L67">        model.addAttribute(&quot;title&quot;, &quot;Patient | Patient Signup&quot;);</span>
+<span class="fc" id="L68">        model.addAttribute(&quot;user&quot;, new User());</span>
+<span class="fc" id="L69">        return &quot;patient_signup&quot;;</span>
+    }
+
+    @PostMapping(&quot;/process-patient-signup&quot;)
+    public String patientSignupProcess(@Valid @ModelAttribute User user, BindingResult bindingResult, Model model) throws IOException, MessagingException {
+<span class="nc" id="L74">        model.addAttribute(&quot;title&quot;, &quot;Patient | Patient Signup&quot;);</span>
+
+<span class="nc" id="L76">        user.setRole(&quot;ROLE_PATIENT&quot;);</span>
+<span class="nc" id="L77">        user.setEnabled(false);</span>
+<span class="nc" id="L78">        user.setImageURL(user.getImageURL());</span>
+<span class="nc" id="L79">        System.out.println(user.getImageURL());</span>
+<span class="nc" id="L80">        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</span>
+<span class="nc" id="L81">        user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="nc" id="L82">        System.out.println(&quot;Image URL -&gt;&quot;+user.getImageURL());</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (this.userRepository.getUserByEmailNative(user.getEmail()) != null) {</span>
+<span class="nc" id="L84">            bindingResult.rejectValue(&quot;email&quot;, &quot;error.user&quot;, &quot;An account already exists for this email.&quot;);</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            if (!userRepository.getUserByEmailNative(user.getEmail()).isEnabled()) {</span>
+<span class="nc" id="L86">                bindingResult.rejectValue(&quot;email&quot;, &quot;error.user&quot;, &quot;Your account is not Enabled. Please check your email if you haven't verified your account yet.&quot;);</span>
+            }
+        }
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (user.getImageURL().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L91">            bindingResult.rejectValue(&quot;imageURL&quot;, &quot;error.user&quot;, &quot;You must upload an Image.&quot;);</span>
+<span class="nc" id="L92">            model.addAttribute(&quot;imageUpload&quot;, false);</span>
+        }
+
+<span class="nc" id="L95">        String token = getRandomTokenString()+userRepository.nextHibernateSequenceNative();</span>
+<span class="nc" id="L96">        AccountActiveToken accountActiveToken = new AccountActiveToken();</span>
+<span class="nc" id="L97">        accountActiveToken.setToken(token);</span>
+<span class="nc" id="L98">        LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="nc" id="L99">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L100">        accountActiveToken.setTokenGenerationDate(Date.valueOf(dateTimeFormatter.format(localDateTime)));</span>
+<span class="nc" id="L101">        accountActiveToken.setEmailIsVerified(false);</span>
+<span class="nc" id="L102">        accountActiveToken.setUser(user);</span>
+<span class="nc" id="L103">        user.setAccountActiveToken(accountActiveToken);</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        if (accountActiveTokenRepository.isTokenAlreadyInRepositoryNative(token) != null) {</span>
+<span class="nc" id="L106">            bindingResult.rejectValue(&quot;email&quot;, &quot;error.user&quot;, &quot;Token Generate Failed. Please Try Again.&quot;);</span>
+<span class="nc" id="L107">            model.addAttribute(&quot;tokenGenerateFail&quot;, true);</span>
+        }
+
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (bindingResult.hasErrors()) {</span>
+<span class="nc" id="L111">            model.addAttribute(&quot;title&quot;, &quot;Patient | Patient Signup&quot;);</span>
+<span class="nc" id="L112">            return &quot;patient_signup&quot;;</span>
+        }
+
+<span class="nc" id="L115">        model.addAttribute(&quot;successMsg&quot;, &quot;Sign-Up Request Successful. Please Check Your Email To Active Your Account!&quot;);</span>
+<span class="nc" id="L116">        model.addAttribute(&quot;successMsgType&quot;, &quot;alert-success&quot;);</span>
+
+<span class="nc" id="L118">        userRepository.save(user);</span>
+
+<span class="nc" id="L120">        emailSenderServiceJava.sendEmail(user.getEmail(), &quot;DoctorsCare Account Verification&quot;,</span>
+<span class="nc" id="L121">                &quot;&lt;h4&gt;Dear Patient, &lt;br&gt; To verify your account please click this link.&lt;h4&gt; &lt;h3&gt;&lt;a target=\&quot;_blank\&quot; href=\&quot;https://doctors-care-application.herokuapp.com/verify-account?token=&quot;+user.getAccountActiveToken().getToken()+&quot;\&quot;&gt; Click Here To Active Your Account&lt;/a&gt;&lt;/h3&gt;&quot; +</span>
+                        &quot;&lt;h4&gt;Regards,&lt;br&gt;&quot; +
+                        &quot;Doctors Care Team&lt;/h4&gt;&quot;);
+<span class="nc" id="L124">        return &quot;patient_signup&quot;;</span>
+    }
+
+    @GetMapping(&quot;/doctor-signup&quot;)
+    public String doctorSignup(Model model) {
+<span class="fc" id="L129">        model.addAttribute(&quot;title&quot;, &quot;Doctor | Doctor Signup&quot;);</span>
+<span class="fc" id="L130">        model.addAttribute(&quot;user&quot;, new DoctorSignup());</span>
+<span class="fc" id="L131">        return &quot;doctor_signup&quot;;</span>
+    }
+
+    @PostMapping(&quot;process-doctor-signup&quot;)
+    public String doctorSignupProcess(@Valid @ModelAttribute DoctorSignup doctorSignup, BindingResult bindingResult, Model model) throws MessagingException {
+<span class="nc" id="L136">        model.addAttribute(&quot;title&quot;, &quot;Doctor | Doctor Signup&quot;);</span>
+
+<span class="nc" id="L138">        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</span>
+<span class="nc" id="L139">        User user = new User(doctorSignup.getName(), doctorSignup.getEmail(), doctorSignup.getPassword(), doctorSignup.getAbout(), doctorSignup.getDOB(), doctorSignup.getPhone(), doctorSignup.getAddress());</span>
+<span class="nc" id="L140">        user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="nc" id="L141">        user.setRole(&quot;ROLE_DOCTOR&quot;);</span>
+<span class="nc" id="L142">        user.setEnabled(false);</span>
+<span class="nc" id="L143">        user.setImageURL(doctorSignup.getImageURL());</span>
+<span class="nc" id="L144">        System.out.println(&quot;Image URL -&gt;&quot;+user.getImageURL());</span>
+<span class="nc" id="L145">        DoctorsAdditionalInfo doctorsAdditionalInfo = new DoctorsAdditionalInfo(doctorSignup.getNid(), doctorSignup.getDoctortype(), doctorSignup.getDegrees(), doctorSignup.getMedicalcollege(), doctorSignup.getAppointmentfee());</span>
+<span class="nc" id="L146">        user.setDoctorsAdditionalInfo(doctorsAdditionalInfo);</span>
+<span class="nc" id="L147">        doctorsAdditionalInfo.setUser(user);</span>
+<span class="nc" id="L148">        DoctorsSchedule doctorsSchedule = new DoctorsSchedule(true, true, true, true, true, true, true, true, true);</span>
+<span class="nc" id="L149">        user.setDoctorsSchedule(doctorsSchedule);</span>
+<span class="nc" id="L150">        doctorsSchedule.setUser(user);</span>
+<span class="nc" id="L151">        model.addAttribute(&quot;user&quot;, doctorSignup);</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (this.userRepository.getUserByEmailNative(user.getEmail()) != null) {</span>
+<span class="nc" id="L153">            bindingResult.rejectValue(&quot;email&quot;, &quot;error.user&quot;, &quot;An account already exists with this email.&quot;);</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">            if (!userRepository.getUserByEmailNative(user.getEmail()).isEnabled()) {</span>
+<span class="nc" id="L155">                bindingResult.rejectValue(&quot;email&quot;, &quot;error.user&quot;, &quot;Your account is not Enabled. Please check your email if you haven't verified your account yet.&quot;);</span>
+            }
+<span class="nc" id="L157">            model.addAttribute(&quot;imageUpload&quot;, false);</span>
+        }
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (doctorSignup.getImageURL().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L161">            bindingResult.rejectValue(&quot;imageURL&quot;, &quot;error.user&quot;, &quot;You must upload an Image.&quot;);</span>
+        }
+
+<span class="nc" id="L164">        String token = getRandomTokenString()+userRepository.nextHibernateSequenceNative();</span>
+<span class="nc" id="L165">        AccountActiveToken accountActiveToken = new AccountActiveToken();</span>
+<span class="nc" id="L166">        accountActiveToken.setToken(token);</span>
+<span class="nc" id="L167">        LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="nc" id="L168">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L169">        accountActiveToken.setTokenGenerationDate(Date.valueOf(dateTimeFormatter.format(localDateTime)));</span>
+<span class="nc" id="L170">        accountActiveToken.setEmailIsVerified(false);</span>
+<span class="nc" id="L171">        accountActiveToken.setUser(user);</span>
+<span class="nc" id="L172">        user.setAccountActiveToken(accountActiveToken);</span>
+
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        if (accountActiveTokenRepository.isTokenAlreadyInRepositoryNative(token) != null) {</span>
+<span class="nc" id="L175">            bindingResult.rejectValue(&quot;email&quot;, &quot;error.user&quot;, &quot;Token Generate Failed. Please Try Again.&quot;);</span>
+<span class="nc" id="L176">            model.addAttribute(&quot;tokenGenerateFail&quot;, true);</span>
+        }
+
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (bindingResult.hasErrors()) {</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (bindingResult.getFieldError(&quot;email&quot;) != null) {</span>
+<span class="nc" id="L181">                String emailError = Objects.requireNonNull(bindingResult.getFieldError(&quot;email&quot;)).getDefaultMessage() + &quot;\n&quot;;</span>
+<span class="nc" id="L182">                model.addAttribute(&quot;emailError&quot;, &quot;yes&quot;);</span>
+<span class="nc" id="L183">                model.addAttribute(&quot;emailErrorMsg&quot;, emailError);</span>
+            }
+<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (bindingResult.getFieldError(&quot;password&quot;) != null) {</span>
+<span class="nc" id="L186">                String passError = Objects.requireNonNull(bindingResult.getFieldError(&quot;password&quot;)).getDefaultMessage() + &quot;\n&quot;;</span>
+<span class="nc" id="L187">                model.addAttribute(&quot;passError&quot;, &quot;yes&quot;);</span>
+<span class="nc" id="L188">                model.addAttribute(&quot;passErrorMsg&quot;, passError);</span>
+            }
+<span class="nc" id="L190">            model.addAttribute(&quot;title&quot;, &quot;Doctor | Doctor Signup&quot;);</span>
+<span class="nc" id="L191">            return &quot;doctor_signup&quot;;</span>
+        }
+
+<span class="nc" id="L194">        model.addAttribute(&quot;successMsg&quot;, &quot;Sign-Up Request Successful. Please Check Your Email To Active Your Account!&quot;);</span>
+<span class="nc" id="L195">        model.addAttribute(&quot;successMsgType&quot;, &quot;alert-success&quot;);</span>
+
+<span class="nc" id="L197">        userRepository.save(user);</span>
+
+<span class="nc" id="L199">        emailSenderServiceJava.sendEmail(user.getEmail(), &quot;DoctorsCare Account Verification&quot;,</span>
+<span class="nc" id="L200">                &quot;&lt;h4&gt;Dear Doctor, &lt;br&gt; To verify your account please click this link.&lt;h4&gt; &lt;h3&gt;&lt;a target=\&quot;_blank\&quot; href=\&quot;https://doctors-care-application.herokuapp.com/verify-account?token=&quot;+user.getAccountActiveToken().getToken()+&quot;\&quot;&gt; Click Here To Active Your Account&lt;/a&gt;&lt;/h3&gt;&quot; +</span>
+                        &quot;&lt;h4&gt;Regards,&lt;br&gt;&quot; +
+                        &quot;Doctors Care Team&lt;/h4&gt;&quot;);
+<span class="nc" id="L203">        return &quot;doctor_signup&quot;;</span>
+    }
+
+    @GetMapping(&quot;/verify-account&quot;)
+    public String verifyAccount(@RequestParam String token, Model model) {
+<span class="fc" id="L208">        model.addAttribute(&quot;title&quot;, &quot;Verify Account Status&quot;);</span>
+<span class="fc" id="L209">        AccountActiveToken accountActiveToken = accountActiveTokenRepository.getAccountActiveTokenByToken(token);</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">        if (accountActiveToken != null) {</span>
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">            if (!accountActiveToken.isEmailIsVerified()) {</span>
+<span class="fc" id="L212">                accountActiveToken.setEmailIsVerified(true);</span>
+<span class="fc" id="L213">                accountActiveToken.getUser().setEnabled(true);</span>
+<span class="fc" id="L214">                accountActiveTokenRepository.save(accountActiveToken);</span>
+<span class="fc" id="L215">                model.addAttribute(&quot;emailVerified&quot;, true);</span>
+            } else {
+<span class="nc bnc" id="L217" title="All 2 branches missed.">                if (!accountActiveToken.getUser().isEnabled()) {</span>
+<span class="nc" id="L218">                    model.addAttribute(&quot;accountDisabled&quot;, true);</span>
+                } else {
+<span class="nc" id="L220">                    model.addAttribute(&quot;emailVerified&quot;, false);</span>
+                }
+            }
+        } else {
+<span class="nc" id="L224">            model.addAttribute(&quot;invalidToken&quot;, true);</span>
+        }
+<span class="fc" id="L226">        System.out.println(&quot;Token = &quot; + token);</span>
+<span class="fc" id="L227">        return &quot;verified_status&quot;;</span>
+    }
+
+    public static String getRandomTokenString() {
+<span class="nc" id="L231">        String CHARS = &quot;AbCdEfGhIjKlMnOpQrStWxYz_1234567890&quot;;</span>
+<span class="nc" id="L232">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L233">        Random rnd = new Random();</span>
+<span class="nc" id="L234">        int max = 900;</span>
+<span class="nc" id="L235">        int min = 600;</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">        while (sb.length() &lt; (int)(Math.random() * ((max - min) + 1)) + min) {</span>
+<span class="nc" id="L237">            int index = (int) (rnd.nextFloat() * CHARS.length());</span>
+<span class="nc" id="L238">            sb.append(CHARS.charAt(index));</span>
+<span class="nc" id="L239">        }</span>
+<span class="nc" id="L240">        return sb.toString();</span>
+    }
+
+
+    @GetMapping(&quot;/login&quot;)
+    public String login(Model model) {
+<span class="fc" id="L246">        model.addAttribute(&quot;title&quot;, &quot;Login to account&quot;);</span>
+<span class="fc" id="L247">        return &quot;login&quot;;</span>
+    }
+
+    @GetMapping(&quot;/forgot-password&quot;)
+    public String forgotPassword(Model model) {
+<span class="fc" id="L252">        model.addAttribute(&quot;title&quot;, &quot;Forgot Password&quot;);</span>
+<span class="fc" id="L253">        model.addAttribute(&quot;sendOtpDiv&quot;, true);</span>
+<span class="fc" id="L254">        model.addAttribute(&quot;verifyOtpDiv&quot;, false);</span>
+<span class="fc" id="L255">        model.addAttribute(&quot;changePasswordDiv&quot;, false);</span>
+<span class="fc" id="L256">        return &quot;forgot_password&quot;;</span>
+    }
+
+    @GetMapping(&quot;/send-otp&quot;)
+    public String sendOTP(@RequestParam String email, Model model, HttpSession httpSession) throws MessagingException {
+<span class="fc" id="L261">        model.addAttribute(&quot;title&quot;, &quot;Forgot Password&quot;);</span>
+<span class="fc" id="L262">        User user = userRepository.getUserByEmailNative(email);</span>
+<span class="pc bpc" id="L263" title="2 of 4 branches missed.">        if (user != null &amp;&amp; !user.getRole().equals(&quot;ROLE_ADMIN&quot;)) {</span>
+<span class="pc bpc" id="L264" title="3 of 4 branches missed.">            if (!user.isEnabled() &amp;&amp; user.getAccountActiveToken().isEmailIsVerified()) {</span>
+<span class="nc" id="L265">                model.addAttribute(&quot;accountDisabled&quot;, true);</span>
+<span class="nc" id="L266">                model.addAttribute(&quot;sendOtpDiv&quot;, true);</span>
+<span class="nc" id="L267">                model.addAttribute(&quot;verifyOtpDiv&quot;, false);</span>
+<span class="nc" id="L268">                model.addAttribute(&quot;changePasswordDiv&quot;, false);</span>
+<span class="pc bpc" id="L269" title="3 of 4 branches missed.">            } else if (!user.isEnabled() &amp;&amp; !user.getAccountActiveToken().isEmailIsVerified()) {</span>
+<span class="nc" id="L270">                model.addAttribute(&quot;accountNotVerified&quot;, true);</span>
+<span class="nc" id="L271">                model.addAttribute(&quot;sendOtpDiv&quot;, true);</span>
+<span class="nc" id="L272">                model.addAttribute(&quot;verifyOtpDiv&quot;, false);</span>
+<span class="nc" id="L273">                model.addAttribute(&quot;changePasswordDiv&quot;, false);</span>
+            } else {
+<span class="fc" id="L275">                model.addAttribute(&quot;title&quot;, &quot;Enter Your OTP&quot;);</span>
+<span class="fc" id="L276">                model.addAttribute(&quot;sendOtpDiv&quot;, false);</span>
+<span class="fc" id="L277">                model.addAttribute(&quot;verifyOtpDiv&quot;, true);</span>
+<span class="fc" id="L278">                model.addAttribute(&quot;changePasswordDiv&quot;, false);</span>
+<span class="fc" id="L279">                String forgotPassOTP = String.valueOf((int) (Math.random() * (999999 - 999)) + 999);</span>
+<span class="fc" id="L280">                emailSenderServiceJava.sendEmail(email, &quot;Doctors Care OTP Verification&quot;, &quot;&lt;h3&gt;Dear user,&lt;br&gt;&quot; +</span>
+                        &quot;To change your password you need to use this OTP code. &lt;br&gt;&quot; +
+                        &quot;Your OTP code is &lt;/h3&gt; &lt;h2&gt;&quot;+forgotPassOTP+&quot;&lt;/h2&gt; &quot; +
+                        &quot;&lt;h3&gt;Regards,&lt;br&gt;&quot; +
+                        &quot;Doctors Care Team.&lt;/h3&gt;&quot;);
+<span class="fc" id="L285">                httpSession.setAttribute(&quot;forgotPassOTP&quot;, forgotPassOTP);</span>
+<span class="fc" id="L286">                httpSession.setAttribute(&quot;forgotPassEmail&quot;, email);</span>
+<span class="fc" id="L287">            }</span>
+        } else {
+<span class="nc" id="L289">            model.addAttribute(&quot;invalidEmail&quot;, true);</span>
+<span class="nc" id="L290">            model.addAttribute(&quot;sendOtpDiv&quot;, true);</span>
+<span class="nc" id="L291">            model.addAttribute(&quot;verifyOtpDiv&quot;, false);</span>
+<span class="nc" id="L292">            model.addAttribute(&quot;changePasswordDiv&quot;, false);</span>
+        }
+<span class="fc" id="L294">        return &quot;forgot_password&quot;;</span>
+    }
+
+    @PostMapping(&quot;/change-password&quot;)
+    public String changePassword(@RequestParam String newPassword, @RequestParam String confirmPassword, Model model, HttpSession httpSession) {
+<span class="nc" id="L299">        model.addAttribute(&quot;title&quot;, &quot;Change Your Password&quot;);</span>
+<span class="nc" id="L300">        System.out.println(newPassword);</span>
+<span class="nc" id="L301">        System.out.println(confirmPassword);</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">        if (newPassword.equals(confirmPassword)) {</span>
+<span class="nc" id="L303">            String passChangerEmail = (String) httpSession.getAttribute(&quot;forgotPassEmail&quot;);</span>
+<span class="nc" id="L304">            User user = userRepository.getUserByEmailNative(passChangerEmail);</span>
+<span class="nc" id="L305">            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</span>
+<span class="nc" id="L306">            user.setPassword(passwordEncoder.encode(newPassword));</span>
+<span class="nc" id="L307">            userRepository.save(user);</span>
+<span class="nc" id="L308">            model.addAttribute(&quot;title&quot;, &quot;Change Password Successful!&quot;);</span>
+<span class="nc" id="L309">            model.addAttribute(&quot;passwordChanged&quot;, true);</span>
+<span class="nc" id="L310">        } else {</span>
+<span class="nc" id="L311">            model.addAttribute(&quot;title&quot;, &quot;Change Password Unsuccessful!&quot;);</span>
+<span class="nc" id="L312">            model.addAttribute(&quot;passwordChanged&quot;, false);</span>
+        }
+<span class="nc" id="L314">        model.addAttribute(&quot;sendOtpDiv&quot;, false);</span>
+<span class="nc" id="L315">        model.addAttribute(&quot;verifyOtpDiv&quot;, false);</span>
+<span class="nc" id="L316">        model.addAttribute(&quot;changePasswordDiv&quot;, true);</span>
+<span class="nc" id="L317">        return &quot;forgot_password&quot;;</span>
+    }
+
+    @GetMapping(&quot;/verify-otp&quot;)
+    public String verifyOTP(@RequestParam String OTP, Model model, HttpSession httpSession) {
+<span class="fc" id="L322">        model.addAttribute(&quot;title&quot;, &quot;Enter Your OTP&quot;);</span>
+<span class="fc" id="L323">        String generatedOTP = (String) httpSession.getAttribute(&quot;forgotPassOTP&quot;);</span>
+<span class="pc bpc" id="L324" title="1 of 2 branches missed.">        if (generatedOTP.equals(OTP)) {</span>
+<span class="fc" id="L325">            model.addAttribute(&quot;title&quot;, &quot;Change Your Password&quot;);</span>
+<span class="fc" id="L326">            model.addAttribute(&quot;sendOtpDiv&quot;, false);</span>
+<span class="fc" id="L327">            model.addAttribute(&quot;verifyOtpDiv&quot;, false);</span>
+<span class="fc" id="L328">            model.addAttribute(&quot;changePasswordDiv&quot;, true);</span>
+        } else {
+<span class="nc" id="L330">            model.addAttribute(&quot;title&quot;, &quot;OTP Doesn't Match. Enter Your OTP Again&quot;);</span>
+<span class="nc" id="L331">            model.addAttribute(&quot;OTPNotMatch&quot;, true);</span>
+<span class="nc" id="L332">            model.addAttribute(&quot;sendOtpDiv&quot;, false);</span>
+<span class="nc" id="L333">            model.addAttribute(&quot;verifyOtpDiv&quot;, true);</span>
+<span class="nc" id="L334">            model.addAttribute(&quot;changePasswordDiv&quot;, false);</span>
+        }
+<span class="fc" id="L336">        return &quot;forgot_password&quot;;</span>
+    }
+
+    @GetMapping(&quot;/test-nextId&quot;)
+    @ResponseBody
+    public String payTest() throws Exception {
+<span class="nc" id="L342">        return userRepository.nextHibernateSequenceNative()+&quot; This is next id?&quot;;</span>
+    }
+
+    @GetMapping(value = &quot;/handle-payment&quot;)
+    public RedirectView payTestHandle() throws Exception {
+<span class="nc" id="L347">        Map&lt;String, String&gt; transactionMap = ParameterBuilder.constructRequestParameters();</span>
+
+<span class="nc" id="L349">        SSLCommerz sslCommerz = new SSLCommerz(&quot;docto62c031c5a653e&quot;, &quot;docto62c031c5a653e@ssl&quot;, true);</span>
+<span class="nc" id="L350">        String url = sslCommerz.initiateTransaction(transactionMap, false);</span>
+<span class="nc" id="L351">        System.out.println(&quot;The url: &quot; + url);</span>
+<span class="nc" id="L352">        System.out.println(&quot;after previous url&quot;);</span>
+<span class="nc" id="L353">        RedirectView redirectView = new RedirectView();</span>
+<span class="nc" id="L354">        redirectView.setUrl(url);</span>
+<span class="nc" id="L355">        return redirectView;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

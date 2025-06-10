@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoctorsCareSpringBootApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication</a> &gt; <span class="el_source">DoctorsCareSpringBootApplication.java</span></div><h1>DoctorsCareSpringBootApplication.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication;
+
+import com.example.doctorscarespringbootapplication.configuration.emailSender.EmailSenderServiceJava;
+import com.example.doctorscarespringbootapplication.dao.UserRepository;
+import com.example.doctorscarespringbootapplication.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+@SpringBootApplication
+
+<span class="fc" id="L20">public class DoctorsCareSpringBootApplication {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public static void main(String[] args) {
+<span class="nc" id="L26">        SpringApplication.run(DoctorsCareSpringBootApplication.class, args);</span>
+<span class="nc" id="L27">    }</span>
+
+
+    /*
+         Every day at 4 PM it will reset doctors_schedule entity..
+    */
+    @Scheduled(cron = &quot;0 0 16 * * *&quot;)
+    void resetDoctorsSchedule() {
+<span class="nc" id="L35">        updateDoctorsScheduleAfter4PM();</span>
+<span class="nc" id="L36">    }</span>
+
+
+    private void updateDoctorsScheduleAfter4PM() {
+<span class="nc" id="L40">        DateTimeFormatter dtfHour = DateTimeFormatter.ofPattern(&quot;HH&quot;);</span>
+<span class="nc" id="L41">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="nc" id="L42">        int hour = Integer.parseInt(dtfHour.format(now));</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (hour &gt;= 16) {</span>
+<span class="nc" id="L44">            List&lt;User&gt; userList = userRepository.findByRole(&quot;ROLE_DOCTOR&quot;);</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            for (User user : userList) {</span>
+<span class="nc" id="L46">                user.getDoctorsSchedule().set_10_00(true);</span>
+<span class="nc" id="L47">                user.getDoctorsSchedule().set_10_30(true);</span>
+<span class="nc" id="L48">                user.getDoctorsSchedule().set_11_00(true);</span>
+<span class="nc" id="L49">                user.getDoctorsSchedule().set_11_30(true);</span>
+<span class="nc" id="L50">                user.getDoctorsSchedule().set_12_00(true);</span>
+<span class="nc" id="L51">                user.getDoctorsSchedule().set_2_00(true);</span>
+<span class="nc" id="L52">                user.getDoctorsSchedule().set_2_30(true);</span>
+<span class="nc" id="L53">                user.getDoctorsSchedule().set_3_00(true);</span>
+<span class="nc" id="L54">                user.getDoctorsSchedule().set_3_30(true);</span>
+<span class="nc" id="L55">                this.userRepository.save(user);</span>
+<span class="nc" id="L56">            }</span>
+        }
+<span class="nc" id="L58">    }</span>
+}
+
+
+@Configuration
+@EnableScheduling
+@ConditionalOnProperty(name = &quot;scheduling.enabled&quot;, matchIfMissing = true)
+<span class="nc" id="L65">class SchedulingConfiguration {</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

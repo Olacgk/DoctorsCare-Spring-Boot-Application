@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminDoctorEditDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.dto</a> &gt; <span class="el_source">AdminDoctorEditDTO.java</span></div><h1>AdminDoctorEditDTO.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.dto;
+
+public class AdminDoctorEditDTO {
+    private String id;
+    private boolean enabled;
+    private String name;
+    private String page;
+    private String DOB;
+    private String email;
+    private String phone;
+    private String address;
+    private String about;
+    private String nid;
+    private String doctortype;
+    private String degrees;
+    private String medicalcollege;
+    private String appointmentfee;
+
+<span class="nc" id="L19">    public AdminDoctorEditDTO(String id, boolean enabled, String name, String page, String DOB, String email, String phone, String address, String about, String nid, String doctortype, String degrees, String medicalcollege, String appointmentfee) {</span>
+<span class="nc" id="L20">        this.id = id;</span>
+<span class="nc" id="L21">        this.enabled = enabled;</span>
+<span class="nc" id="L22">        this.name = name;</span>
+<span class="nc" id="L23">        this.page = page;</span>
+<span class="nc" id="L24">        this.DOB = DOB;</span>
+<span class="nc" id="L25">        this.email = email;</span>
+<span class="nc" id="L26">        this.phone = phone;</span>
+<span class="nc" id="L27">        this.address = address;</span>
+<span class="nc" id="L28">        this.about = about;</span>
+<span class="nc" id="L29">        this.nid = nid;</span>
+<span class="nc" id="L30">        this.doctortype = doctortype;</span>
+<span class="nc" id="L31">        this.degrees = degrees;</span>
+<span class="nc" id="L32">        this.medicalcollege = medicalcollege;</span>
+<span class="nc" id="L33">        this.appointmentfee = appointmentfee;</span>
+<span class="nc" id="L34">    }</span>
+
+<span class="nc" id="L36">    public AdminDoctorEditDTO() {</span>
+<span class="nc" id="L37">    }</span>
+
+    public String getId() {
+<span class="nc" id="L40">        return id;</span>
+    }
+
+    public void setId(String id) {
+<span class="nc" id="L44">        this.id = id;</span>
+<span class="nc" id="L45">    }</span>
+
+    public boolean isEnabled() {
+<span class="nc" id="L48">        return enabled;</span>
+    }
+
+    public void setEnabled(boolean enabled) {
+<span class="nc" id="L52">        this.enabled = enabled;</span>
+<span class="nc" id="L53">    }</span>
+
+    public String getName() {
+<span class="nc" id="L56">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L60">        this.name = name;</span>
+<span class="nc" id="L61">    }</span>
+
+    public String getPage() {
+<span class="nc" id="L64">        return page;</span>
+    }
+
+    public void setPage(String page) {
+<span class="nc" id="L68">        this.page = page;</span>
+<span class="nc" id="L69">    }</span>
+
+    public String getDOB() {
+<span class="nc" id="L72">        return DOB;</span>
+    }
+
+    public void setDOB(String DOB) {
+<span class="nc" id="L76">        this.DOB = DOB;</span>
+<span class="nc" id="L77">    }</span>
+
+    public String getEmail() {
+<span class="nc" id="L80">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="nc" id="L84">        this.email = email;</span>
+<span class="nc" id="L85">    }</span>
+
+    public String getPhone() {
+<span class="nc" id="L88">        return phone;</span>
+    }
+
+    public void setPhone(String phone) {
+<span class="nc" id="L92">        this.phone = phone;</span>
+<span class="nc" id="L93">    }</span>
+
+    public String getAddress() {
+<span class="nc" id="L96">        return address;</span>
+    }
+
+    public void setAddress(String address) {
+<span class="nc" id="L100">        this.address = address;</span>
+<span class="nc" id="L101">    }</span>
+
+    public String getAbout() {
+<span class="nc" id="L104">        return about;</span>
+    }
+
+    public void setAbout(String about) {
+<span class="nc" id="L108">        this.about = about;</span>
+<span class="nc" id="L109">    }</span>
+
+    public String getNid() {
+<span class="nc" id="L112">        return nid;</span>
+    }
+
+    public void setNid(String nid) {
+<span class="nc" id="L116">        this.nid = nid;</span>
+<span class="nc" id="L117">    }</span>
+
+    public String getDoctortype() {
+<span class="nc" id="L120">        return doctortype;</span>
+    }
+
+    public void setDoctortype(String doctortype) {
+<span class="nc" id="L124">        this.doctortype = doctortype;</span>
+<span class="nc" id="L125">    }</span>
+
+    public String getDegrees() {
+<span class="nc" id="L128">        return degrees;</span>
+    }
+
+    public void setDegrees(String degrees) {
+<span class="nc" id="L132">        this.degrees = degrees;</span>
+<span class="nc" id="L133">    }</span>
+
+    public String getMedicalcollege() {
+<span class="nc" id="L136">        return medicalcollege;</span>
+    }
+
+    public void setMedicalcollege(String medicalcollege) {
+<span class="nc" id="L140">        this.medicalcollege = medicalcollege;</span>
+<span class="nc" id="L141">    }</span>
+
+    public String getAppointmentfee() {
+<span class="nc" id="L144">        return appointmentfee;</span>
+    }
+
+    public void setAppointmentfee(String appointmentfee) {
+<span class="nc" id="L148">        this.appointmentfee = appointmentfee;</span>
+<span class="nc" id="L149">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

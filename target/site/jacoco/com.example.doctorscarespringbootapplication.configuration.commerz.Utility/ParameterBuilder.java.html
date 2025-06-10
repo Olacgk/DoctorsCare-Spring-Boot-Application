@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParameterBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.configuration.commerz.Utility</a> &gt; <span class="el_source">ParameterBuilder.java</span></div><h1>ParameterBuilder.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.configuration.commerz.Utility;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L8">public class ParameterBuilder {</span>
+    public static String getParamsString(Map&lt;String, String&gt; params, boolean urlEncode) throws UnsupportedEncodingException {
+<span class="nc" id="L10">        StringBuilder result = new StringBuilder();</span>
+
+<span class="nc bnc" id="L12" title="All 2 branches missed.">        for (Map.Entry&lt;String, String&gt; entry : params.entrySet()) {</span>
+<span class="nc bnc" id="L13" title="All 2 branches missed.">            if (urlEncode)</span>
+<span class="nc" id="L14">                result.append(URLEncoder.encode(entry.getKey(), &quot;UTF-8&quot;));</span>
+            else
+<span class="nc" id="L16">                result.append(entry.getKey());</span>
+
+<span class="nc" id="L18">            result.append(&quot;=&quot;);</span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">            if (urlEncode)</span>
+<span class="nc" id="L20">                result.append(URLEncoder.encode(entry.getValue(), &quot;UTF-8&quot;));</span>
+            else
+<span class="nc" id="L22">                result.append(entry.getValue());</span>
+<span class="nc" id="L23">            result.append(&quot;&amp;&quot;);</span>
+<span class="nc" id="L24">        }</span>
+
+<span class="nc" id="L26">        String resultString = result.toString();</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        return resultString.length() &gt; 0</span>
+<span class="nc" id="L28">                ? resultString.substring(0, resultString.length() - 1)</span>
+<span class="nc" id="L29">                : resultString;</span>
+    }
+
+    public static Map&lt;String, String&gt; constructRequestParameters() {
+        // CREATING LIST OF POST DATA
+<span class="nc" id="L34">        String baseUrl = &quot;https://doctors-care-application.herokuapp.com/&quot;;//Request.Url.Scheme + &quot;://&quot; + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + &quot;/&quot;;</span>
+<span class="nc" id="L35">        Map&lt;String, String&gt; postData = new HashMap&lt;String, String&gt;();</span>
+<span class="nc" id="L36">        postData.put(&quot;total_amount&quot;, &quot;150.00&quot;);</span>
+<span class="nc" id="L37">        postData.put(&quot;tran_id&quot;, &quot;TESTASPNET1234&quot;);</span>
+<span class="nc" id="L38">        postData.put(&quot;success_url&quot;, baseUrl + &quot;patient/appoint-doctor/success&quot;);</span>
+<span class="nc" id="L39">        postData.put(&quot;fail_url&quot;, &quot;https://sandbox.sslcommerz.com/developer/fail.php&quot;);</span>
+<span class="nc" id="L40">        postData.put(&quot;cancel_url&quot;, &quot;https://sandbox.sslcommerz.com/developer/cancel.php&quot;);</span>
+<span class="nc" id="L41">        postData.put(&quot;version&quot;, &quot;3.00&quot;);</span>
+<span class="nc" id="L42">        postData.put(&quot;cus_name&quot;, &quot;ABC XY&quot;);</span>
+<span class="nc" id="L43">        postData.put(&quot;cus_email&quot;, &quot;abc.xyz@mail.co&quot;);</span>
+<span class="nc" id="L44">        postData.put(&quot;cus_add1&quot;, &quot;Address Line On&quot;);</span>
+<span class="nc" id="L45">        postData.put(&quot;cus_add2&quot;, &quot;Address Line Tw&quot;);</span>
+<span class="nc" id="L46">        postData.put(&quot;cus_city&quot;, &quot;City Nam&quot;);</span>
+<span class="nc" id="L47">        postData.put(&quot;cus_state&quot;, &quot;State Nam&quot;);</span>
+<span class="nc" id="L48">        postData.put(&quot;cus_postcode&quot;, &quot;Post Cod&quot;);</span>
+<span class="nc" id="L49">        postData.put(&quot;cus_country&quot;, &quot;Countr&quot;);</span>
+<span class="nc" id="L50">        postData.put(&quot;cus_phone&quot;, &quot;0111111111&quot;);</span>
+<span class="nc" id="L51">        postData.put(&quot;cus_fax&quot;, &quot;0171111111&quot;);</span>
+<span class="nc" id="L52">        postData.put(&quot;ship_name&quot;, &quot;ABC XY&quot;);</span>
+<span class="nc" id="L53">        postData.put(&quot;ship_add1&quot;, &quot;Address Line On&quot;);</span>
+<span class="nc" id="L54">        postData.put(&quot;ship_add2&quot;, &quot;Address Line Tw&quot;);</span>
+<span class="nc" id="L55">        postData.put(&quot;ship_city&quot;, &quot;City Nam&quot;);</span>
+<span class="nc" id="L56">        postData.put(&quot;ship_state&quot;, &quot;State Nam&quot;);</span>
+<span class="nc" id="L57">        postData.put(&quot;ship_postcode&quot;, &quot;Post Cod&quot;);</span>
+<span class="nc" id="L58">        postData.put(&quot;ship_country&quot;, &quot;Countr&quot;);</span>
+<span class="nc" id="L59">        postData.put(&quot;value_a&quot;, &quot;ref00&quot;);</span>
+<span class="nc" id="L60">        postData.put(&quot;value_b&quot;, &quot;ref00&quot;);</span>
+<span class="nc" id="L61">        postData.put(&quot;value_c&quot;, &quot;ref00&quot;);</span>
+<span class="nc" id="L62">        postData.put(&quot;value_d&quot;, &quot;ref00&quot;);</span>
+<span class="nc" id="L63">        postData.put(&quot;ipn_url&quot;, &quot;https://doctors-care-application.herokuapp.com/pay-success-validator&quot;);</span>
+<span class="nc" id="L64">        return postData;</span>
+    }
+
+    public static Map&lt;String, String&gt; constructRequestParam(String payment, String transactionID, String patientName) {
+        // CREATING LIST OF POST DATA
+        //baseUrl = Request.Url.Scheme + &quot;://&quot; + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + &quot;/&quot;;
+<span class="nc" id="L70">        String baseUrl = &quot;https://doctors-care-application.herokuapp.com/&quot;;//Request.Url.Scheme + &quot;://&quot; + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + &quot;/&quot;;</span>
+<span class="nc" id="L71">        Map&lt;String, String&gt; postData = new HashMap&lt;String, String&gt;();</span>
+<span class="nc" id="L72">        postData.put(&quot;total_amount&quot;, payment);</span>
+<span class="nc" id="L73">        postData.put(&quot;tran_id&quot;, transactionID);</span>
+<span class="nc" id="L74">        postData.put(&quot;success_url&quot;, baseUrl + &quot;patient/appoint-doctor/success&quot;);</span>
+<span class="nc" id="L75">        postData.put(&quot;fail_url&quot;, &quot;https://sandbox.sslcommerz.com/developer/fail.php&quot;);</span>
+<span class="nc" id="L76">        postData.put(&quot;cancel_url&quot;, &quot;https://sandbox.sslcommerz.com/developer/cancel.php&quot;);</span>
+<span class="nc" id="L77">        postData.put(&quot;version&quot;, &quot;3.00&quot;);</span>
+<span class="nc" id="L78">        postData.put(&quot;cus_name&quot;, patientName);</span>
+<span class="nc" id="L79">        postData.put(&quot;cus_email&quot;, &quot;xyz@mail.com&quot;);</span>
+<span class="nc" id="L80">        postData.put(&quot;cus_add1&quot;, &quot;Dhaka&quot;);</span>
+<span class="nc" id="L81">        postData.put(&quot;cus_city&quot;, &quot;Khilkhet&quot;);</span>
+<span class="nc" id="L82">        postData.put(&quot;cus_state&quot;, &quot;Dhaka&quot;);</span>
+<span class="nc" id="L83">        postData.put(&quot;cus_postcode&quot;, &quot;1212&quot;);</span>
+<span class="nc" id="L84">        postData.put(&quot;cus_country&quot;, &quot;Bangladesh&quot;);</span>
+<span class="nc" id="L85">        postData.put(&quot;cus_phone&quot;, &quot;0111111111&quot;);</span>
+<span class="nc" id="L86">        postData.put(&quot;cus_fax&quot;, &quot;0171111111&quot;);</span>
+<span class="nc" id="L87">        postData.put(&quot;ship_name&quot;, &quot;Doctor-ABC&quot;);</span>
+<span class="nc" id="L88">        postData.put(&quot;ship_add1&quot;, &quot;Address Line On&quot;);</span>
+<span class="nc" id="L89">        postData.put(&quot;ship_add2&quot;, &quot;Address Line Tw&quot;);</span>
+<span class="nc" id="L90">        postData.put(&quot;ship_city&quot;, &quot;City Nam&quot;);</span>
+<span class="nc" id="L91">        postData.put(&quot;ship_state&quot;, &quot;State Nam&quot;);</span>
+<span class="nc" id="L92">        postData.put(&quot;ship_postcode&quot;, &quot;Post Cod&quot;);</span>
+<span class="nc" id="L93">        postData.put(&quot;ship_country&quot;, &quot;Country&quot;);</span>
+<span class="nc" id="L94">        return postData;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

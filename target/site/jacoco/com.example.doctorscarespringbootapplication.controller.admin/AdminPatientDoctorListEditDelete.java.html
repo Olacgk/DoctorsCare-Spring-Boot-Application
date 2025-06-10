@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminPatientDoctorListEditDelete.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.controller.admin</a> &gt; <span class="el_source">AdminPatientDoctorListEditDelete.java</span></div><h1>AdminPatientDoctorListEditDelete.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.controller.admin;
+
+import com.example.doctorscarespringbootapplication.dao.UserRepository;
+import com.example.doctorscarespringbootapplication.dto.*;
+import com.example.doctorscarespringbootapplication.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+
+@Controller
+@RequestMapping(&quot;/admin&quot;)
+<span class="nc" id="L18">public class AdminPatientDoctorListEditDelete {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping(&quot;/process-patient-delete&quot;)
+//    @Transactional
+    public ResponseEntity&lt;Object&gt; doDeletePatient(@RequestBody DeleteUserDTO deleteUserDTO) {
+<span class="nc" id="L26">        userRepository.deleteById(Integer.parseInt(deleteUserDTO.getUserId()));</span>
+<span class="nc" id="L27">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Patient Deleted Successfully!&quot;);</span>
+<span class="nc" id="L28">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+    @PostMapping(&quot;/process-doctor-delete&quot;)
+//    @Transactional
+    public ResponseEntity&lt;Object&gt; doDeleteDoctor(@RequestBody DeleteUserDTO deleteUserDTO) {
+<span class="nc" id="L34">        userRepository.deleteById(Integer.parseInt(deleteUserDTO.getUserId()));</span>
+<span class="nc" id="L35">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Doctor Deleted Successfully!&quot;);</span>
+<span class="nc" id="L36">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+    @PostMapping(&quot;/edit-patient-details&quot;)
+    public String editPatientDetails(@ModelAttribute EditUserDTO editUserDTO, Model model, Principal principal) {
+<span class="nc" id="L41">        User patientUser = this.userRepository.findById(Integer.parseInt(editUserDTO.getUserId()));</span>
+<span class="nc" id="L42">        model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
+<span class="nc" id="L43">        model.addAttribute(&quot;page&quot;, editUserDTO.getPageNo());</span>
+<span class="nc" id="L44">        addCommonData(model, principal);</span>
+<span class="nc" id="L45">        return &quot;admin/admin_patient_edit&quot;;</span>
+    }
+
+    @PostMapping(&quot;/edit-doctor-details&quot;)
+    public String editDoctorDetails(@ModelAttribute EditUserDTO editUserDTO, Model model, Principal principal) {
+<span class="nc" id="L50">        User doctorUser = this.userRepository.findById(Integer.parseInt(editUserDTO.getUserId()));</span>
+<span class="nc" id="L51">        model.addAttribute(&quot;doctorUser&quot;, doctorUser);</span>
+<span class="nc" id="L52">        model.addAttribute(&quot;page&quot;, editUserDTO.getPageNo());</span>
+<span class="nc" id="L53">        addCommonData(model, principal);</span>
+<span class="nc" id="L54">        return &quot;admin/admin_doctor_edit&quot;;</span>
+    }
+
+    @PostMapping(&quot;/process-patient-edit&quot;)
+    public String processPatientEdit(@ModelAttribute AdminPatientEditDTO adminPatientEditDTO) {
+<span class="nc" id="L59">        User user = userRepository.findById(Integer.parseInt(adminPatientEditDTO.getId()));</span>
+<span class="nc" id="L60">        user.setName(adminPatientEditDTO.getName());</span>
+<span class="nc" id="L61">        user.setDOB(adminPatientEditDTO.getDOB());</span>
+<span class="nc" id="L62">        user.setEmail(adminPatientEditDTO.getEmail());</span>
+<span class="nc" id="L63">        user.setPhone(adminPatientEditDTO.getPhone());</span>
+<span class="nc" id="L64">        user.setAddress(adminPatientEditDTO.getAddress());</span>
+<span class="nc" id="L65">        user.setAbout(adminPatientEditDTO.getAbout());</span>
+<span class="nc" id="L66">        user.setEnabled(adminPatientEditDTO.isEnabled());</span>
+<span class="nc" id="L67">        userRepository.save(user);</span>
+<span class="nc" id="L68">        return &quot;redirect:/admin/patients-list/&quot; + adminPatientEditDTO.getPage();</span>
+    }
+
+    @PostMapping(&quot;/process-doctor-edit&quot;)
+    public String processDoctorEdit(@ModelAttribute AdminDoctorEditDTO adminDoctorEditDTO) {
+<span class="nc" id="L73">        User user = userRepository.findById(Integer.parseInt(adminDoctorEditDTO.getId()));</span>
+<span class="nc" id="L74">        user.setName(adminDoctorEditDTO.getName());</span>
+<span class="nc" id="L75">        user.setDOB(adminDoctorEditDTO.getDOB());</span>
+<span class="nc" id="L76">        user.setEmail(adminDoctorEditDTO.getEmail());</span>
+<span class="nc" id="L77">        user.setPhone(adminDoctorEditDTO.getPhone());</span>
+<span class="nc" id="L78">        user.setAddress(adminDoctorEditDTO.getAddress());</span>
+<span class="nc" id="L79">        user.setAbout(adminDoctorEditDTO.getAbout());</span>
+<span class="nc" id="L80">        user.setEnabled(adminDoctorEditDTO.isEnabled());</span>
+<span class="nc" id="L81">        user.getDoctorsAdditionalInfo().setNid(adminDoctorEditDTO.getNid());</span>
+<span class="nc" id="L82">        user.getDoctorsAdditionalInfo().setDoctortype(adminDoctorEditDTO.getDoctortype());</span>
+<span class="nc" id="L83">        user.getDoctorsAdditionalInfo().setDegrees(adminDoctorEditDTO.getDegrees());</span>
+<span class="nc" id="L84">        user.getDoctorsAdditionalInfo().setMedicalcollege(adminDoctorEditDTO.getMedicalcollege());</span>
+<span class="nc" id="L85">        user.getDoctorsAdditionalInfo().setAppointmentfee(adminDoctorEditDTO.getAppointmentfee());</span>
+<span class="nc" id="L86">        userRepository.save(user);</span>
+<span class="nc" id="L87">        return &quot;redirect:/admin/doctors-list/&quot; + adminDoctorEditDTO.getPage();</span>
+    }
+
+    @ModelAttribute
+    public void addCommonData(Model model, Principal principal) {
+<span class="nc" id="L92">        String userEmail = principal.getName();</span>
+<span class="nc" id="L93">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
+<span class="nc" id="L94">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L95">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminMainController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.controller.admin</a> &gt; <span class="el_source">AdminMainController.java</span></div><h1>AdminMainController.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.controller.admin;
+
+
+import com.example.doctorscarespringbootapplication.configuration.emailSender.EmailSenderServiceJava;
+import com.example.doctorscarespringbootapplication.dao.*;
+import com.example.doctorscarespringbootapplication.entity.AppointDoctor;
+import com.example.doctorscarespringbootapplication.entity.Prescription;
+import com.example.doctorscarespringbootapplication.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
+import java.security.Principal;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+@RequestMapping(&quot;/admin&quot;)
+<span class="nc" id="L29">public class AdminMainController {</span>
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AppointDoctorRepository appointDoctorRepository;
+
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private PostsRepository postsRepository;
+
+    @Autowired
+    private SavedPostsRepository savedPostsRepository;
+
+    @GetMapping(&quot;/index&quot;)
+    public String adminHome(Model model, Principal principal) {
+<span class="nc" id="L47">        model.addAttribute(&quot;title&quot;, &quot;Admin Dashboard&quot;);</span>
+//        Three cards data
+<span class="nc" id="L49">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+
+<span class="nc" id="L51">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="nc" id="L52">        String todayDate = dtfDate.format(now);</span>
+<span class="nc" id="L53">        String todaysAppointmentCount = appointDoctorRepository.countAllByAppointmentDate(Date.valueOf(todayDate));</span>
+<span class="nc" id="L54">        String todaysCompletedAppointment = prescriptionRepository.countAllByAppointDoctorAppointmentDateAndMedicinesIsNotNull(Date.valueOf(todayDate));</span>
+<span class="nc" id="L55">        model.addAttribute(&quot;todaysAppointment&quot;, todaysAppointmentCount);</span>
+<span class="nc" id="L56">        model.addAttribute(&quot;todaysCompletedAppointment&quot;, todaysCompletedAppointment);</span>
+
+<span class="nc" id="L58">        String todaysGivenPrescriptions = prescriptionRepository.countAllByAppointDoctorAppointmentDateAndMedicinesIsNotNull(Date.valueOf(todayDate));</span>
+<span class="nc" id="L59">        long totalPrescriptions = prescriptionRepository.count();</span>
+<span class="nc" id="L60">        model.addAttribute(&quot;todaysGivenPrescriptions&quot;, todaysGivenPrescriptions);</span>
+<span class="nc" id="L61">        model.addAttribute(&quot;totalGivenPrescriptions&quot;, totalPrescriptions);</span>
+
+<span class="nc" id="L63">        long totalPatient = userRepository.countByRole(&quot;ROLE_PATIENT&quot;);</span>
+<span class="nc" id="L64">        long totalActivePatient = userRepository.countByRoleAndEnabled(&quot;ROLE_PATIENT&quot;, true);</span>
+<span class="nc" id="L65">        model.addAttribute(&quot;totalPatient&quot;, totalPatient);</span>
+<span class="nc" id="L66">        model.addAttribute(&quot;totalActivePatient&quot;, totalActivePatient);</span>
+
+<span class="nc" id="L68">        long totalDoctor = userRepository.countByRole(&quot;ROLE_DOCTOR&quot;);</span>
+<span class="nc" id="L69">        long totalActiveDoctor = userRepository.countByRoleAndEnabled(&quot;ROLE_DOCTOR&quot;, true);</span>
+<span class="nc" id="L70">        model.addAttribute(&quot;totalDoctor&quot;, totalDoctor);</span>
+<span class="nc" id="L71">        model.addAttribute(&quot;totalActiveDoctor&quot;, totalActiveDoctor);</span>
+//        Upcoming Appointments
+<span class="nc" id="L73">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;);</span>
+<span class="nc" id="L74">        LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="nc" id="L75">        LocalDateTime value = localDateTime.minus(30, ChronoUnit.MINUTES);</span>
+<span class="nc" id="L76">        Time currentTimeMinus30 = Time.valueOf(dateTimeFormatter.format(value));</span>
+
+<span class="nc" id="L78">        Pageable pageable = PageRequest.of(0, 10);</span>
+<span class="nc" id="L79">        Page&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository.findAllByAppointmentDateOrderByIdDesc(Date.valueOf(todayDate), pageable);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (appointDoctorList.getTotalElements() != 0) {</span>
+<span class="nc" id="L81">            model.addAttribute(&quot;appointDoctorList&quot;, appointDoctorList);</span>
+        } else {
+<span class="nc" id="L83">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
+        }
+
+//        Top 3 doctors
+<span class="nc" id="L87">        List&lt;User&gt; userList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L88">        List&lt;String&gt; top3DoctorsList = appointDoctorRepository.findTop3DoctorsNativeQuery();</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (String s : top3DoctorsList) {</span>
+<span class="nc" id="L90">            User userX = userRepository.findById(Integer.parseInt(s));</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if (userX != null) {</span>
+<span class="nc" id="L92">                userList.add(userX);</span>
+            }
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">        model.addAttribute(&quot;userList&quot;, userList);</span>
+<span class="nc" id="L96">        addCommonData(model, principal);</span>
+<span class="nc" id="L97">        return &quot;admin/admin_home&quot;;</span>
+    }
+
+    @GetMapping(&quot;/profile&quot;)
+    public String patientProfile(Model model, Principal principal) {
+<span class="nc" id="L102">        model.addAttribute(&quot;title&quot;, &quot;Patient Profile&quot;);</span>
+<span class="nc" id="L103">        addCommonData(model, principal);</span>
+<span class="nc" id="L104">        return &quot;admin/admin_profile&quot;;</span>
+    }
+
+    @GetMapping(&quot;/emailing-service&quot;)
+    public String adminEmailingService(Model model, Principal principal) {
+<span class="nc" id="L109">        model.addAttribute(&quot;title&quot;, &quot;Admin Emailing Service&quot;);</span>
+<span class="nc" id="L110">        addCommonData(model, principal);</span>
+<span class="nc" id="L111">        return &quot;admin/admin_email_service&quot;;</span>
+    }
+
+    @PostMapping(&quot;/process-email-send&quot;)
+    public String emailServiceProcess(@RequestParam(&quot;sendMailTo&quot;) String sendMailTo,
+                                      @RequestParam(&quot;emailSubject&quot;) String emailSubject,
+                                      @RequestParam(&quot;emailBody&quot;) String emailBody,
+                                      Model model, Principal principal) throws MessagingException {
+<span class="nc" id="L119">        System.out.println(sendMailTo);</span>
+<span class="nc" id="L120">        System.out.println(emailSubject);</span>
+<span class="nc" id="L121">        System.out.println(emailBody);</span>
+
+<span class="nc bnc" id="L123" title="All 4 branches missed.">        switch (sendMailTo) {</span>
+            case &quot;All Patients&quot;:
+<span class="nc" id="L125">                sendMailToAllPatients(emailSubject, emailBody);</span>
+<span class="nc" id="L126">                break;</span>
+            case &quot;All Doctors&quot;:
+<span class="nc" id="L128">                sendMailToAllDoctors(emailSubject, emailBody);</span>
+<span class="nc" id="L129">                break;</span>
+            case &quot;All Patients &amp; Doctors&quot;:
+<span class="nc" id="L131">                sendMailToAllPatientsAndDoctors(emailSubject, emailBody);</span>
+                break;
+        }
+<span class="nc" id="L134">        model.addAttribute(&quot;title&quot;, &quot;Email Sent Successful&quot;);</span>
+<span class="nc" id="L135">        model.addAttribute(&quot;emailSent&quot;, true);</span>
+<span class="nc" id="L136">        addCommonData(model, principal);</span>
+<span class="nc" id="L137">        return &quot;admin/admin_email_service&quot;;</span>
+    }
+
+    @Autowired
+    private EmailSenderServiceJava emailSenderServiceJava;
+
+    private void sendMailToAllPatients(String emailSubject, String emailBody) throws MessagingException {
+<span class="nc" id="L144">        List&lt;User&gt; allPatientEmailList = userRepository.findByRoleAndEnabled(&quot;ROLE_PATIENT&quot;, true);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        for (User user : allPatientEmailList) {</span>
+<span class="nc" id="L146">            emailSenderServiceJava.sendEmail(user.getEmail(), emailSubject, emailBody);</span>
+<span class="nc" id="L147">        }</span>
+
+<span class="nc" id="L149">    }</span>
+
+    private void sendMailToAllDoctors(String emailSubject, String emailBody) throws MessagingException {
+<span class="nc" id="L152">        List&lt;User&gt; allDoctorEmailList = userRepository.findByRoleAndEnabled(&quot;ROLE_DOCTOR&quot;, true);</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        for (User user : allDoctorEmailList) {</span>
+<span class="nc" id="L154">            emailSenderServiceJava.sendEmail(user.getEmail(), emailSubject, emailBody);</span>
+<span class="nc" id="L155">        }</span>
+<span class="nc" id="L156">    }</span>
+
+    private void sendMailToAllPatientsAndDoctors(String emailSubject, String emailBody) throws MessagingException {
+<span class="nc" id="L159">        List&lt;User&gt; allPatientAndDoctorEmailList = userRepository.findByRoleAndEnabledNative(&quot;ROLE_PATIENT&quot;, &quot;ROLE_DOCTOR&quot;);</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        for (User user : allPatientAndDoctorEmailList) {</span>
+<span class="nc" id="L161">            emailSenderServiceJava.sendEmail(user.getEmail(), emailSubject, emailBody);</span>
+<span class="nc" id="L162">        }</span>
+<span class="nc" id="L163">    }</span>
+
+    @GetMapping(&quot;/appointment-logs/{page}&quot;)
+    public String patientTodayAppointment(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L167">        model.addAttribute(&quot;title&quot;, &quot;Appointment Logs&quot;);</span>
+<span class="nc" id="L168">        Pageable pageable = PageRequest.of(page - 1, 8);</span>
+<span class="nc" id="L169">        Page&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository.findAllByOrderByIdDesc(pageable);</span>
+<span class="nc" id="L170">        System.out.println(appointDoctorList.getTotalElements());</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (appointDoctorList.getTotalElements() != 0) {</span>
+<span class="nc" id="L172">            model.addAttribute(&quot;appointDoctorList&quot;, appointDoctorList);</span>
+        } else {
+<span class="nc" id="L174">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
+        }
+<span class="nc" id="L176">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L177">        model.addAttribute(&quot;totalPages&quot;, appointDoctorList.getTotalPages());</span>
+<span class="nc" id="L178">        addCommonData(model, principal);</span>
+<span class="nc" id="L179">        return &quot;admin/admin_appointment_logs&quot;;</span>
+    }
+
+    @GetMapping(&quot;/prescription-logs/{page}&quot;)
+    public String prescriptionLogs(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L184">        model.addAttribute(&quot;title&quot;, &quot;Appointment Logs&quot;);</span>
+<span class="nc" id="L185">        Pageable pageable = PageRequest.of(page - 1, 8);</span>
+<span class="nc" id="L186">        Page&lt;Prescription&gt; prescriptionList = prescriptionRepository</span>
+<span class="nc" id="L187">                .findAllBySymptomsIsNotOrderByIdDesc(pageable, &quot;&quot;);</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">        if (prescriptionList.getTotalElements() == 0) {</span>
+<span class="nc" id="L189">            model.addAttribute(&quot;noPrescription&quot;, &quot;true&quot;);</span>
+        }
+<span class="nc" id="L191">        model.addAttribute(&quot;prescriptionList&quot;, prescriptionList);</span>
+<span class="nc" id="L192">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L193">        model.addAttribute(&quot;totalPages&quot;, prescriptionList.getTotalPages());</span>
+<span class="nc" id="L194">        addCommonData(model, principal);</span>
+<span class="nc" id="L195">        return &quot;admin/admin_prescription_logs&quot;;</span>
+    }
+
+    @PostMapping(&quot;/view-single-prescription&quot;)
+    public String viewSinglePrescription(@RequestParam String appointmentID, Model model, Principal principal) {
+<span class="nc" id="L200">        model.addAttribute(&quot;title&quot;, &quot;Viewing Prescription&quot;);</span>
+<span class="nc" id="L201">        model.addAttribute(&quot;appointmentID&quot;, appointmentID);</span>
+<span class="nc" id="L202">        AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(appointmentID));</span>
+<span class="nc" id="L203">        User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
+<span class="nc" id="L204">        User doctorUser = userRepository.findById(Integer.parseInt(appointDoctor.getDoctorID()));</span>
+<span class="nc" id="L205">        model.addAttribute(&quot;appointDoctor&quot;, appointDoctor);</span>
+<span class="nc" id="L206">        model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
+<span class="nc" id="L207">        model.addAttribute(&quot;doctorUser&quot;, doctorUser);</span>
+<span class="nc" id="L208">        addCommonData(model, principal);</span>
+<span class="nc" id="L209">        return &quot;admin/admin_view_single_prescription&quot;;</span>
+    }
+
+    @GetMapping(&quot;/patients-list/{page}&quot;)
+    public String patientsList(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L214">        model.addAttribute(&quot;title&quot;, &quot;Patients List&quot;);</span>
+<span class="nc" id="L215">        Pageable pageable = PageRequest.of(page - 1, 8);</span>
+<span class="nc" id="L216">        Page&lt;User&gt; patientList = userRepository.findByRoleOrderByIdDesc(&quot;ROLE_PATIENT&quot;, pageable);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">        if (patientList.getTotalElements() == 0) {</span>
+<span class="nc" id="L218">            model.addAttribute(&quot;noPatient&quot;, true);</span>
+        }
+<span class="nc" id="L220">        model.addAttribute(&quot;patientList&quot;, patientList);</span>
+<span class="nc" id="L221">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L222">        model.addAttribute(&quot;totalPages&quot;, patientList.getTotalPages());</span>
+<span class="nc" id="L223">        addCommonData(model, principal);</span>
+<span class="nc" id="L224">        return &quot;admin/admin_patient_list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/doctors-list/{page}&quot;)
+    public String doctorsList(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L229">        model.addAttribute(&quot;title&quot;, &quot;Doctors List&quot;);</span>
+<span class="nc" id="L230">        Pageable pageable = PageRequest.of(page - 1, 8);</span>
+<span class="nc" id="L231">        Page&lt;User&gt; doctorList = userRepository.findByRoleOrderByIdDesc(&quot;ROLE_DOCTOR&quot;, pageable);</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">        if (doctorList.getTotalElements() == 0) {</span>
+<span class="nc" id="L233">            model.addAttribute(&quot;noDoctor&quot;, true);</span>
+        }
+<span class="nc" id="L235">        model.addAttribute(&quot;doctorList&quot;, doctorList);</span>
+<span class="nc" id="L236">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L237">        model.addAttribute(&quot;totalPages&quot;, doctorList.getTotalPages());</span>
+<span class="nc" id="L238">        addCommonData(model, principal);</span>
+<span class="nc" id="L239">        return &quot;admin/admin_doctor_list&quot;;</span>
+    }
+
+
+    @ModelAttribute
+    public void addCommonData(Model model, Principal principal) {
+<span class="nc" id="L245">        String userEmail = principal.getName();</span>
+<span class="nc" id="L246">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
+<span class="nc" id="L247">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L248">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

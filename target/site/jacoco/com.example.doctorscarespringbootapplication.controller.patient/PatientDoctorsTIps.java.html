@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PatientDoctorsTIps.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.controller.patient</a> &gt; <span class="el_source">PatientDoctorsTIps.java</span></div><h1>PatientDoctorsTIps.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.controller.patient;
+
+import com.example.doctorscarespringbootapplication.dao.*;
+import com.example.doctorscarespringbootapplication.dto.*;
+import com.example.doctorscarespringbootapplication.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
+
+import static com.example.doctorscarespringbootapplication.controller.doctor.DoctorPostHomepage.getObjectResponseEntityComment;
+
+@Controller
+@RequestMapping(&quot;/patient&quot;)
+<span class="nc" id="L24">public class PatientDoctorsTIps {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PostsRepository postsRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
+
+    @Autowired
+    private CommentsRepository commentsRepository;
+
+    @Autowired
+    private SavedPostsRepository savedPostsRepository;
+
+    @GetMapping(&quot;/post-homepage/{page}&quot;)
+    public String postHomepage(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L43">        model.addAttribute(&quot;title&quot;, &quot;Doctor Tips Homepage&quot;);</span>
+<span class="nc" id="L44">        Pageable pageable = PageRequest.of(page - 1, 5);</span>
+<span class="nc" id="L45">        Page&lt;Posts&gt; postsList = postsRepository.findAllByOrderByIdDesc(pageable);</span>
+<span class="nc" id="L46">        model.addAttribute(&quot;postsListSize&quot;, postsList.getTotalElements());</span>
+<span class="nc" id="L47">        model.addAttribute(&quot;postsList&quot;, postsList);</span>
+<span class="nc" id="L48">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L49">        model.addAttribute(&quot;totalPages&quot;, postsList.getTotalPages());</span>
+<span class="nc" id="L50">        addCommonData(model, principal);</span>
+<span class="nc" id="L51">        return &quot;patient/patient_doctor_tips_homepage&quot;;</span>
+    }
+
+    @GetMapping(&quot;/saved-tips-posts/{page}&quot;)
+    public String savedTipsPosts(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
+<span class="nc" id="L56">        patientSavedTips(page, model, principal, this.userRepository, savedPostsRepository);</span>
+<span class="nc" id="L57">        return &quot;patient/patient_doctor_saved_tips&quot;;</span>
+    }
+
+    public static void patientSavedTips(Integer page, Model model, Principal principal, UserRepository userRepository, SavedPostsRepository savedPostsRepository) {
+<span class="nc" id="L61">        model.addAttribute(&quot;title&quot;, &quot;Patients Saved Tips&quot;);</span>
+<span class="nc" id="L62">        model.addAttribute(&quot;postsaved&quot;, &quot;true&quot;);</span>
+<span class="nc" id="L63">        String userEmail = principal.getName();</span>
+<span class="nc" id="L64">        User user = userRepository.getUserByEmailNative(userEmail);</span>
+<span class="nc" id="L65">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L66">        Pageable pageable = PageRequest.of(page - 1, 5);</span>
+<span class="nc" id="L67">        Page&lt;SavedPosts&gt; savedPostsList = savedPostsRepository.findBySaverId(user.getId() + &quot;&quot;, pageable);</span>
+<span class="nc" id="L68">        model.addAttribute(&quot;postsListSize&quot;, savedPostsList.getTotalElements());</span>
+<span class="nc" id="L69">        model.addAttribute(&quot;postsList&quot;, savedPostsList);</span>
+<span class="nc" id="L70">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="nc" id="L71">        model.addAttribute(&quot;totalPages&quot;, savedPostsList.getTotalPages());</span>
+<span class="nc" id="L72">    }</span>
+
+    @PostMapping(&quot;/process-like&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doLikePost(@RequestBody LikesDTO likesDTO, Model model, Principal principal) {
+<span class="nc" id="L77">        return getObjectResponseEntityLike(likesDTO, likesRepository, postsRepository);</span>
+    }
+
+    @PostMapping(&quot;/process-comment&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doCommentPost(@RequestBody CommentsDTO commentsDTO, Model model, Principal principal) {
+<span class="nc" id="L83">        return getObjectResponseEntityComment(commentsDTO, postsRepository, this.commentsRepository);</span>
+    }
+
+    @PostMapping(&quot;/process-savepost&quot;)
+    public ResponseEntity&lt;Object&gt; doSavePost(@RequestBody SavedPostsDTO savedPostsDTO, Model model, Principal principal) {
+<span class="nc" id="L88">        return getObjectResponseEntitySavePost(savedPostsDTO, postsRepository, savedPostsRepository);</span>
+    }
+
+
+    @PostMapping(&quot;/process-unsavepost&quot;)
+    @Transactional
+    public ResponseEntity&lt;Object&gt; doUnsavePost(@RequestBody UnsavePostDTO unsavePostDTO, Model model, Principal principal) {
+<span class="nc" id="L95">        return getObjectResponseEntityUnsavePost(unsavePostDTO, savedPostsRepository);</span>
+    }
+
+    @ModelAttribute
+    public void addCommonData(Model model, Principal principal) {
+<span class="nc" id="L100">        String userEmail = principal.getName();</span>
+<span class="nc" id="L101">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
+<span class="nc" id="L102">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="nc" id="L103">    }</span>
+
+    public static ResponseEntity&lt;Object&gt; getObjectResponseEntityLike(@RequestBody LikesDTO likesDTO, LikesRepository likesRepository, PostsRepository postsRepository) {
+<span class="nc" id="L106">        String likesCountByUser = likesRepository.countAllByLikerIdAndPostsId(likesDTO.getLikerId(), Integer.parseInt(likesDTO.getPostId()));</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (likesCountByUser.equals(&quot;0&quot;)) {</span>
+<span class="nc" id="L108">            Posts posts = postsRepository.findById(Integer.parseInt(likesDTO.getPostId()));</span>
+<span class="nc" id="L109">            List&lt;Likes&gt; likesList = likesRepository.findByPostsId(Integer.parseInt(likesDTO.getPostId()));</span>
+<span class="nc" id="L110">            likesList.add(new Likes(posts, likesDTO.getLikerId()));</span>
+<span class="nc" id="L111">            posts.setLikesList(likesList);</span>
+<span class="nc" id="L112">            postsRepository.save(posts);</span>
+<span class="nc" id="L113">            String likesCount = likesRepository.countAllByPostsId(Integer.parseInt(likesDTO.getPostId()));</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (Integer.parseInt(likesCount) &gt; 1) {</span>
+<span class="nc" id="L115">                ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;You and &quot; + (Integer.parseInt(likesCount) - 1) + &quot; people&quot;);</span>
+<span class="nc" id="L116">                return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+            }
+<span class="nc" id="L118">            ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;You&quot;);</span>
+<span class="nc" id="L119">            return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+        }
+<span class="nc" id="L121">        likesRepository.deleteByLikerIdAndPostsId(likesDTO.getLikerId(), Integer.parseInt(likesDTO.getPostId()));</span>
+<span class="nc" id="L122">        String likesCount = likesRepository.countAllByPostsId(Integer.parseInt(likesDTO.getPostId()));</span>
+<span class="nc" id="L123">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, Integer.parseInt(likesCount) + &quot; people&quot;);</span>
+<span class="nc" id="L124">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+
+    public static ResponseEntity&lt;Object&gt; getObjectResponseEntitySavePost(@RequestBody SavedPostsDTO savedPostsDTO, PostsRepository postsRepository, SavedPostsRepository savedPostsRepository) {
+<span class="nc" id="L129">        Posts posts = postsRepository.findById(Integer.parseInt(savedPostsDTO.getPostId()));</span>
+<span class="nc" id="L130">        SavedPosts savedPosts = null;</span>
+<span class="nc" id="L131">        savedPosts = savedPostsRepository.findByPostsIdAndSaverId(Integer.parseInt(savedPostsDTO.getPostId()), savedPostsDTO.getSaverId());</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (savedPosts == null) {</span>
+<span class="nc" id="L133">            List&lt;SavedPosts&gt; savedPostsList = savedPostsRepository.findByPostsId(Integer.parseInt(savedPostsDTO.getPostId()));</span>
+<span class="nc" id="L134">            SavedPosts savedPosts1 = new SavedPosts();</span>
+<span class="nc" id="L135">            savedPosts1.setSaverId(savedPostsDTO.getSaverId());</span>
+<span class="nc" id="L136">            savedPosts1.setPosts(posts);</span>
+<span class="nc" id="L137">            savedPostsList.add(savedPosts1);</span>
+<span class="nc" id="L138">            posts.setSavedPostsList(savedPostsList);</span>
+<span class="nc" id="L139">            postsRepository.save(posts);</span>
+<span class="nc" id="L140">            ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Saved&quot;);</span>
+<span class="nc" id="L141">            return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+        }
+<span class="nc" id="L143">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;Success Already Saved&quot;, &quot;Already Saved&quot;);</span>
+<span class="nc" id="L144">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+
+    public static ResponseEntity&lt;Object&gt; getObjectResponseEntityUnsavePost(@RequestBody UnsavePostDTO unsavePostDTO, SavedPostsRepository savedPostsRepository) {
+<span class="nc" id="L149">        System.out.println(&quot;Post ID -&gt; &quot; + unsavePostDTO.getPostId());</span>
+<span class="nc" id="L150">        System.out.println(&quot;Unsaver ID -&gt; &quot; + unsavePostDTO.getUnsaverId());</span>
+<span class="nc" id="L151">        savedPostsRepository.deleteByPostsIdAndSaverId(Integer.parseInt(unsavePostDTO.getPostId()), unsavePostDTO.getUnsaverId());</span>
+<span class="nc" id="L152">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Unsaved Successfully!&quot;);</span>
+<span class="nc" id="L153">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

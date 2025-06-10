@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoctorSignup.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.dto</a> &gt; <span class="el_source">DoctorSignup.java</span></div><h1>DoctorSignup.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.dto;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+public class DoctorSignup {
+    private String name;
+    @NotBlank(message = &quot;Email can't be blank&quot;)
+    @Pattern(regexp = &quot;[a-z0-9]+.+@[a-z]+\\.[a-z]{2,3}&quot;, message = &quot;Email is not valid!&quot;)
+//    @Pattern(regexp = &quot;[a-z0-9]+^[1-9]\\d*(\\.\\d+)+@[a-z]+\\.[a-z]{2,3}&quot;, message = &quot;Email is not valid!&quot;)
+
+    private String email;
+
+    @NotBlank(message = &quot;Field Can't be blank&quot;)
+//    @Pattern(regexp = &quot;\&quot;^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3,}$\&quot;\n&quot;, message = &quot;Password Should Be of Minimum eight characters, at least one letter and one number&quot;)
+    @Size(min = 3, max = 250, message = &quot;Password must be within 3 - 250 characters!&quot;)
+    private String password;
+    private String about;
+    private String role;
+    private boolean enabled;
+    private String imageURL;
+
+    //    Date of birth
+    private String DOB;
+
+    private String phone;
+
+    private String address;
+
+    private String nid;
+
+    private String doctortype;
+
+    private String degrees;
+
+    private String medicalcollege;
+
+    private String appointmentfee;
+
+
+<span class="nc" id="L42">    public DoctorSignup(String name, String email, String password, String about, String role, boolean enabled, String imageURL, String DOB, String phone, String address, String nid, String doctortype, String degrees, String medicalcollege, String appointmentfee) {</span>
+<span class="nc" id="L43">        this.name = name;</span>
+<span class="nc" id="L44">        this.email = email;</span>
+<span class="nc" id="L45">        this.password = password;</span>
+<span class="nc" id="L46">        this.about = about;</span>
+<span class="nc" id="L47">        this.role = role;</span>
+<span class="nc" id="L48">        this.enabled = enabled;</span>
+<span class="nc" id="L49">        this.imageURL = imageURL;</span>
+<span class="nc" id="L50">        this.DOB = DOB;</span>
+<span class="nc" id="L51">        this.phone = phone;</span>
+<span class="nc" id="L52">        this.address = address;</span>
+<span class="nc" id="L53">        this.nid = nid;</span>
+<span class="nc" id="L54">        this.doctortype = doctortype;</span>
+<span class="nc" id="L55">        this.degrees = degrees;</span>
+<span class="nc" id="L56">        this.medicalcollege = medicalcollege;</span>
+<span class="nc" id="L57">        this.appointmentfee = appointmentfee;</span>
+<span class="nc" id="L58">    }</span>
+
+<span class="fc" id="L60">    public DoctorSignup() {</span>
+<span class="fc" id="L61">    }</span>
+
+    public String getName() {
+<span class="nc" id="L64">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="nc" id="L68">        this.name = name;</span>
+<span class="nc" id="L69">    }</span>
+
+    public String getEmail() {
+<span class="nc" id="L72">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="nc" id="L76">        this.email = email;</span>
+<span class="nc" id="L77">    }</span>
+
+    public String getPassword() {
+<span class="nc" id="L80">        return password;</span>
+    }
+
+    public void setPassword(String password) {
+<span class="nc" id="L84">        this.password = password;</span>
+<span class="nc" id="L85">    }</span>
+
+    public String getAbout() {
+<span class="nc" id="L88">        return about;</span>
+    }
+
+    public void setAbout(String about) {
+<span class="nc" id="L92">        this.about = about;</span>
+<span class="nc" id="L93">    }</span>
+
+    public String getRole() {
+<span class="nc" id="L96">        return role;</span>
+    }
+
+    public void setRole(String role) {
+<span class="nc" id="L100">        this.role = role;</span>
+<span class="nc" id="L101">    }</span>
+
+    public boolean isEnabled() {
+<span class="nc" id="L104">        return enabled;</span>
+    }
+
+    public void setEnabled(boolean enabled) {
+<span class="nc" id="L108">        this.enabled = enabled;</span>
+<span class="nc" id="L109">    }</span>
+
+    public String getImageURL() {
+<span class="nc" id="L112">        return imageURL;</span>
+    }
+
+    public void setImageURL(String imageURL) {
+<span class="nc" id="L116">        this.imageURL = imageURL;</span>
+<span class="nc" id="L117">    }</span>
+
+    public String getDOB() {
+<span class="nc" id="L120">        return DOB;</span>
+    }
+
+    public void setDOB(String DOB) {
+<span class="nc" id="L124">        this.DOB = DOB;</span>
+<span class="nc" id="L125">    }</span>
+
+    public String getPhone() {
+<span class="nc" id="L128">        return phone;</span>
+    }
+
+    public void setPhone(String phone) {
+<span class="nc" id="L132">        this.phone = phone;</span>
+<span class="nc" id="L133">    }</span>
+
+    public String getAddress() {
+<span class="nc" id="L136">        return address;</span>
+    }
+
+    public void setAddress(String address) {
+<span class="nc" id="L140">        this.address = address;</span>
+<span class="nc" id="L141">    }</span>
+
+    public String getNid() {
+<span class="nc" id="L144">        return nid;</span>
+    }
+
+    public void setNid(String nid) {
+<span class="nc" id="L148">        this.nid = nid;</span>
+<span class="nc" id="L149">    }</span>
+
+    public String getDoctortype() {
+<span class="nc" id="L152">        return doctortype;</span>
+    }
+
+    public void setDoctortype(String doctortype) {
+<span class="nc" id="L156">        this.doctortype = doctortype;</span>
+<span class="nc" id="L157">    }</span>
+
+    public String getDegrees() {
+<span class="nc" id="L160">        return degrees;</span>
+    }
+
+    public void setDegrees(String degrees) {
+<span class="nc" id="L164">        this.degrees = degrees;</span>
+<span class="nc" id="L165">    }</span>
+
+    public String getMedicalcollege() {
+<span class="nc" id="L168">        return medicalcollege;</span>
+    }
+
+    public void setMedicalcollege(String medicalcollege) {
+<span class="nc" id="L172">        this.medicalcollege = medicalcollege;</span>
+<span class="nc" id="L173">    }</span>
+
+    public String getAppointmentfee() {
+<span class="nc" id="L176">        return appointmentfee;</span>
+    }
+
+    public void setAppointmentfee(String appointmentfee) {
+<span class="nc" id="L180">        this.appointmentfee = appointmentfee;</span>
+<span class="nc" id="L181">    }</span>
+
+
+    @Override
+    public String toString() {
+<span class="nc" id="L186">        return &quot;DoctorSignup{&quot; +</span>
+                &quot;name='&quot; + name + '\'' +
+                &quot;, email='&quot; + email + '\'' +
+                &quot;, password='&quot; + password + '\'' +
+                &quot;, about='&quot; + about + '\'' +
+                &quot;, role='&quot; + role + '\'' +
+                &quot;, enabled=&quot; + enabled +
+                &quot;, imageURL='&quot; + imageURL + '\'' +
+                &quot;, DOB='&quot; + DOB + '\'' +
+                &quot;, phone='&quot; + phone + '\'' +
+                &quot;, address='&quot; + address + '\'' +
+                &quot;, nid='&quot; + nid + '\'' +
+                &quot;, doctortype='&quot; + doctortype + '\'' +
+                &quot;, degrees='&quot; + degrees + '\'' +
+                &quot;, medicalcollege='&quot; + medicalcollege + '\'' +
+                &quot;, appointmentfee='&quot; + appointmentfee + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

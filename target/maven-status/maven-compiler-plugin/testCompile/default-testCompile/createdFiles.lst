@@ -1,2 +1,7 @@
+com\example\doctorscarespringbootapplication\controller\HomeControllerTest.class
+com\example\doctorscarespringbootapplication\controller\HomeControllerTest$1.class
+com\example\doctorscarespringbootapplication\controller\doctor\DoctorMainControllerTest.class
 com\example\doctorscarespringbootapplication\controller\patient\PatientMainControllerTest.class
+com\example\doctorscarespringbootapplication\controller\HomeControllerTest$2.class
 com\example\doctorscarespringbootapplication\DoctorsCareSpringBootApplicationTests.class
+com\example\doctorscarespringbootapplication\controller\doctor\DoctorPostHomepageTest.class

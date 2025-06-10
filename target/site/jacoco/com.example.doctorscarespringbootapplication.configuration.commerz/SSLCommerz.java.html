@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SSLCommerz.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.configuration.commerz</a> &gt; <span class="el_source">SSLCommerz.java</span></div><h1>SSLCommerz.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.configuration.commerz;
+
+import com.example.doctorscarespringbootapplication.configuration.commerz.Utility.ParameterBuilder;
+import com.example.doctorscarespringbootapplication.configuration.commerz.Utility.Util;
+import com.example.doctorscarespringbootapplication.configuration.commerz.parametermappings.SSLCommerzInitResponse;
+import com.example.doctorscarespringbootapplication.configuration.commerz.parametermappings.SSLCommerzValidatorResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * This class is responsible for initiating Transaction request
+ * Generating request URL with Session or JSON list to perform payment option selection
+ * Validates returned response from payment pages and finalize transaction.
+ */
+public class SSLCommerz {
+
+    private String storeId;
+    private String storePass;
+    private boolean storeTestMode;
+
+    private String[] keyList;
+    private String generateHash;
+    private String error;
+
+<span class="nc" id="L36">    private String sslczURL = &quot;https://securepay.sslcommerz.com/&quot;;</span>
+<span class="nc" id="L37">    private String submitURL = &quot;gwprocess/v3/api.php&quot;;</span>
+<span class="nc" id="L38">    private String validationURL = &quot;validator/api/validationserverAPI.php&quot;;</span>
+<span class="nc" id="L39">    private String checkingURL = &quot;validator/api/merchantTransIDvalidationAPI.php&quot;;</span>
+
+    /****
+     *
+     * @param Store_ID
+     * Store_ID is that Id of user to connect SSLCOmmerz
+     * @param Store_Pass
+     * Store_Pass is that password of user to connect SSLCOmmerz
+     * @param Store_Test_Mode
+     *  Store_Test_Mode is to define whether user is testing this or not.
+     * @throws Exception
+     */
+<span class="nc" id="L51">    public SSLCommerz(String Store_ID, String Store_Pass, boolean Store_Test_Mode) throws Exception {</span>
+<span class="nc bnc" id="L52" title="All 4 branches missed.">        if (!Store_ID.isEmpty() &amp;&amp; !Store_Pass.isEmpty()) {</span>
+<span class="nc" id="L53">            this.storeId = Store_ID;</span>
+<span class="nc" id="L54">            this.storePass = Store_Pass;</span>
+<span class="nc" id="L55">            this.setSSLCzTestMode(Store_Test_Mode);</span>
+        } else {
+<span class="nc" id="L57">            throw new Exception(&quot;Please provide Store ID and Password to initialize SSLCommerz&quot;);</span>
+        }
+<span class="nc" id="L59">    }</span>
+
+    /***
+     *
+     * @param storeTestMode
+     * storeTestMode defines user Testing mode and sets test id, password and sandbox URL
+     */
+    private void setSSLCzTestMode(boolean storeTestMode) {
+<span class="nc" id="L67">        this.storeTestMode = storeTestMode;</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (storeTestMode) {</span>
+<span class="nc" id="L70">            this.storeId = &quot;docto62f28257d4314&quot;;</span>
+<span class="nc" id="L71">            this.storePass = &quot;docto62f28257d4314@ssl&quot;;</span>
+<span class="nc" id="L72">            this.sslczURL = &quot;https://sandbox.sslcommerz.com/&quot;;</span>
+        }
+
+<span class="nc" id="L75">    }</span>
+
+    /**
+     * @param postData         postData is a Map with String Key and String value.
+     *                         Construct this Map with Necessary Key value pair to provide request parameters.
+     * @param isGetGatewayList isGetGatewayList is to define whether user wants to get response as Gateway list or not
+     * @return Returns a String which is an URL with Session Key to perform payment option selection,
+     * and payment finalization
+     * @throws Exception
+     */
+    public String initiateTransaction(Map&lt;String, String&gt; postData, boolean isGetGatewayList) throws Exception {
+<span class="nc" id="L86">        postData.put(&quot;store_id&quot;, this.storeId);</span>
+<span class="nc" id="L87">        postData.put(&quot;store_passwd&quot;, this.storePass);</span>
+<span class="nc" id="L88">        String response = this.sendPost(postData);</span>
+        try {
+<span class="nc" id="L90">            SSLCommerzInitResponse resp = Util.extractInitResponse(response);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            if (resp.status.equals(&quot;SUCCESS&quot;)) {</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                if (isGetGatewayList) {</span>
+                    // We will work on it!
+                } else {
+<span class="nc" id="L95">                    return resp.getGatewayPageURL();</span>
+                }
+            } else {
+<span class="nc" id="L98">                throw new Exception(&quot;Unable to get data from SSLCommerz. Please contact your manager!&quot;);</span>
+            }
+<span class="nc" id="L100">        } catch (Exception e) {</span>
+<span class="nc" id="L101">            throw new Exception(e.getMessage());</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">        return response;</span>
+    }
+
+    private String sendPost(Map&lt;String, String&gt; postData) throws IOException {
+<span class="nc" id="L107">        System.out.println(this.sslczURL + this.submitURL);</span>
+<span class="nc" id="L108">        String response = SSLCommerz.post(this.sslczURL + this.submitURL, postData);</span>
+<span class="nc" id="L109">        return response;</span>
+    }
+
+    /**
+     * @param uri      uri to hit SSL Commerz URI
+     * @param postData postData is the request parameter Map comprised of key value pair
+     * @return Returns a String which is an URL with Session Key to perform payment option selection,
+     * and payment finalization
+     * @throws IOException
+     */
+    private static String post(String uri, Map&lt;String, String&gt; postData) throws IOException {
+<span class="nc" id="L120">        String output = &quot;&quot;;</span>
+<span class="nc" id="L121">        URL url = new URL(uri);</span>
+
+<span class="nc" id="L123">        String urlParameters = ParameterBuilder.getParamsString(postData, true);</span>
+<span class="nc" id="L124">        byte[] postDataBytes = urlParameters.getBytes();</span>
+<span class="nc" id="L125">        int postDataLength = postDataBytes.length;</span>
+
+<span class="nc" id="L127">        HttpURLConnection con = (HttpURLConnection) url.openConnection();</span>
+<span class="nc" id="L128">        con.setRequestMethod(&quot;POST&quot;);</span>
+<span class="nc" id="L129">        con.setConnectTimeout(5000);</span>
+<span class="nc" id="L130">        con.setReadTimeout(5000);</span>
+
+<span class="nc" id="L132">        con.setInstanceFollowRedirects(false);</span>
+<span class="nc" id="L133">        con.setRequestProperty(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded&quot;);</span>
+<span class="nc" id="L134">        con.setRequestProperty(&quot;charset&quot;, &quot;utf-8&quot;);</span>
+<span class="nc" id="L135">        con.setRequestProperty(&quot;Content-Length&quot;, Integer.toString(postDataLength));</span>
+<span class="nc" id="L136">        con.setUseCaches(false);</span>
+<span class="nc" id="L137">        con.setDoOutput(true);</span>
+<span class="nc" id="L138">        con.getOutputStream().write(postDataBytes);</span>
+
+
+<span class="nc" id="L141">        BufferedReader br = new BufferedReader(</span>
+<span class="nc" id="L142">                new InputStreamReader(con.getInputStream()));</span>
+        String outputLine;
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        while ((outputLine = br.readLine()) != null) {</span>
+<span class="nc" id="L145">            output = output + outputLine;</span>
+        }
+<span class="nc" id="L147">        br.close();</span>
+<span class="nc" id="L148">        return output;</span>
+    }
+
+    /**
+     * @param merchantTrnxnId       merchantTrnxnId : merchants Transaction id.
+     * @param merchantTrnxnAmount   merchantTrnxnAmount: merchants transaction amount.
+     * @param merchantTrnxnCurrency merchantTrnxnCurrency: Merchants transaction amount
+     * @param requestParameters     requestParameters is a Map of String as key and String as value
+     *                              which should be constructed from the success response of the payment page.
+     * @return Returns a boolean value indicating a valid success response or not.
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
+    boolean orderValidate(String merchantTrnxnId, String merchantTrnxnAmount, String merchantTrnxnCurrency,
+                          Map&lt;String, String&gt; requestParameters) throws IOException, NoSuchAlgorithmException {
+<span class="nc" id="L163">        boolean hash_verified = this.ipnHashVerify(requestParameters);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        if (hash_verified) {</span>
+
+<span class="nc" id="L166">            String EncodedValID = URLEncoder.encode(requestParameters.get(&quot;val_id&quot;), Charset.forName(&quot;UTF-8&quot;).displayName());</span>
+<span class="nc" id="L167">            String EncodedStoreID = URLEncoder.encode(this.storeId, Charset.forName(&quot;UTF-8&quot;).displayName());</span>
+<span class="nc" id="L168">            String EncodedStorePassword = URLEncoder.encode(this.storePass, Charset.forName(&quot;UTF-8&quot;).displayName());</span>
+
+
+            //GET Request
+<span class="nc" id="L172">            String validUrl = this.sslczURL + this.validationURL + &quot;?val_id=&quot; + EncodedValID</span>
+                    + &quot;&amp;store_id=&quot; + EncodedStoreID + &quot;&amp;store_passwd=&quot; + EncodedStorePassword + &quot;&amp;v=1&amp;format=json&quot;;
+<span class="nc" id="L174">            String json = Util.getByOpeningJavaUrlConnection(validUrl);</span>
+
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (!json.isEmpty()) {</span>
+<span class="nc" id="L177">                SSLCommerzValidatorResponse resp = Util.extractValidatorResponse(json);//new JavaScriptSerializer().Deserialize &lt; SSLCommerzValidatorResponse &gt; (json);</span>
+
+<span class="nc bnc" id="L179" title="All 4 branches missed.">                if (resp.status.equals(&quot;VALID&quot;) || resp.status.equals(&quot;VALIDATED&quot;)) {</span>
+
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                    if (merchantTrnxnId.equals(resp.tran_id)</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                            &amp;&amp; (Math.abs(Double.parseDouble(merchantTrnxnAmount) - Double.parseDouble(resp.currency_amount)) &lt; 1)</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">                            &amp;&amp; merchantTrnxnCurrency.equals(resp.currency_type)) {</span>
+<span class="nc" id="L184">                        return true;</span>
+                    } else {
+<span class="nc" id="L186">                        this.error = &quot;Currency Amount not matching&quot;;</span>
+<span class="nc" id="L187">                        return false;</span>
+                    }
+
+                } else {
+<span class="nc" id="L191">                    this.error = &quot;This transaction is either expired or failed&quot;;</span>
+<span class="nc" id="L192">                    return false;</span>
+                }
+            } else {
+<span class="nc" id="L195">                this.error = &quot;Unable to get Transaction JSON status&quot;;</span>
+<span class="nc" id="L196">                return false;</span>
+
+            }
+        } else {
+<span class="nc" id="L200">            this.error = &quot;Unable to verify hash&quot;;</span>
+<span class="nc" id="L201">            return false;</span>
+        }
+    }
+
+    /**
+     * @param requestParameters requestParameters is a Map of String which should be constructed from the RequestParameter returned from
+     *                          the success response of payment page.
+     * @return Returns if the Hash generated during SSL Commerz payment request and the hash generated from the
+     * redirected success response from that payment page
+     * @throws UnsupportedEncodingException
+     * @throws NoSuchAlgorithmException
+     */
+    private Boolean ipnHashVerify(final Map&lt;String, String&gt; requestParameters) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+
+        // Check For verify_sign and verify_key parameters
+<span class="nc bnc" id="L216" title="All 4 branches missed.">        if (!requestParameters.get(&quot;verify_sign&quot;).isEmpty() &amp;&amp; !requestParameters.get(&quot;verify_key&quot;).isEmpty()) {</span>
+            // Get the verify key
+<span class="nc" id="L218">            String verify_key = requestParameters.get(&quot;verify_key&quot;);</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (!verify_key.isEmpty()) {</span>
+
+                // Split key String by comma to make a list array
+<span class="nc" id="L222">                keyList = verify_key.split(&quot;,&quot;);</span>
+<span class="nc" id="L223">                TreeMap&lt;String, String&gt; sortedMap = new TreeMap&lt;String, String&gt;();</span>
+
+                // Store key and value of post in a sorted Map
+<span class="nc bnc" id="L226" title="All 2 branches missed.">                for (final String k : keyList) {</span>
+<span class="nc" id="L227">                    sortedMap.put(k, requestParameters.get(k));</span>
+                }
+
+                // Store Hashed Password in list
+<span class="nc" id="L231">                final String hashedPass = this.md5(this.storePass);</span>
+<span class="nc" id="L232">                sortedMap.put(&quot;store_passwd&quot;, hashedPass);</span>
+                // Concat and make String from array
+<span class="nc" id="L234">                String hashString = &quot;&quot;;</span>
+<span class="nc" id="L235">                hashString += ParameterBuilder.getParamsString(sortedMap, false) + &quot;&amp;&quot;;</span>
+
+                // Trim '&amp;' from end of this String
+<span class="nc" id="L238">                hashString = hashString.substring(0, hashString.length() - 1); // omitting last &amp;</span>
+
+                // Make hash by hash_string and store
+<span class="nc" id="L241">                generateHash = this.md5(hashString);</span>
+
+                // Check if generated hash and verify_sign match or not
+                // Matched
+<span class="nc" id="L245">                return generateHash.equals(requestParameters.get(&quot;verify_sign&quot;));</span>
+            }
+
+<span class="nc" id="L248">            return false;</span>
+        } else {
+<span class="nc" id="L250">            return false;</span>
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// Make PHP like MD5 Hashing
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;s&quot;&gt;&lt;/param&gt;
+    /// &lt;returns&gt;md5 Hashed String&lt;/returns&gt;
+    private String md5(String s) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+<span class="nc" id="L260">        byte[] bytesOfMessage = s.getBytes(&quot;UTF-8&quot;);</span>
+<span class="nc" id="L261">        MessageDigest md = MessageDigest.getInstance(&quot;MD5&quot;);</span>
+<span class="nc" id="L262">        byte[] theDigest = md.digest(bytesOfMessage);</span>
+<span class="nc" id="L263">        StringBuffer sb = new StringBuffer();</span>
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        for (int i = 0; i &lt; theDigest.length; ++i) {</span>
+<span class="nc" id="L265">            sb.append(Integer.toHexString((theDigest[i] &amp; 0xFF) | 0x100).substring(1, 3));</span>
+        }
+<span class="nc" id="L267">        return sb.toString();</span>
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

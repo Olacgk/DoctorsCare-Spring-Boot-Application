@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MessageModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.configuration.websocket</a> &gt; <span class="el_source">MessageModel.java</span></div><h1>MessageModel.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.configuration.websocket;
+
+public class MessageModel {
+
+    private String senderName;
+    private String receiverName;
+    private String message;
+
+
+<span class="nc" id="L10">    public MessageModel(String senderName, String receiverName, String message) {</span>
+<span class="nc" id="L11">        this.senderName = senderName;</span>
+<span class="nc" id="L12">        this.receiverName = receiverName;</span>
+<span class="nc" id="L13">        this.message = message;</span>
+<span class="nc" id="L14">    }</span>
+
+<span class="nc" id="L16">    public MessageModel() {</span>
+<span class="nc" id="L17">    }</span>
+
+    public String getReceiverName() {
+<span class="nc" id="L20">        return receiverName;</span>
+    }
+
+    public void setReceiverName(String receiverName) {
+<span class="nc" id="L24">        this.receiverName = receiverName;</span>
+<span class="nc" id="L25">    }</span>
+
+    public String getMessage() {
+<span class="nc" id="L28">        return message;</span>
+    }
+
+    public void setMessage(String message) {
+<span class="nc" id="L32">        this.message = message;</span>
+<span class="nc" id="L33">    }</span>
+
+    public String getSenderName() {
+<span class="nc" id="L36">        return senderName;</span>
+    }
+
+    public void setSenderName(String senderName) {
+<span class="nc" id="L40">        this.senderName = senderName;</span>
+<span class="nc" id="L41">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

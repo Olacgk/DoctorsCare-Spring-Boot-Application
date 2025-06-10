@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppointDoctorTransaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoctorsCare-Spring-Boot-Application</a> &gt; <a href="index.source.html" class="el_package">com.example.doctorscarespringbootapplication.entity</a> &gt; <span class="el_source">AppointDoctorTransaction.java</span></div><h1>AppointDoctorTransaction.java</h1><pre class="source lang-java linenums">package com.example.doctorscarespringbootapplication.entity;
+
+import javax.persistence.*;
+import java.sql.Time;
+
+@Entity
+public class AppointDoctorTransaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private String txid;
+
+    private String doctorId;
+
+    private String doctorFee;
+
+    @Basic
+    private Time appointmentTime;
+
+    @Column
+    private String transactionStatus;
+
+<span class="nc" id="L24">    public AppointDoctorTransaction(long id, String txid, String doctorId, String doctorFee, String transactionStatus) {</span>
+<span class="nc" id="L25">        this.id = id;</span>
+<span class="nc" id="L26">        this.txid = txid;</span>
+<span class="nc" id="L27">        this.doctorId = doctorId;</span>
+<span class="nc" id="L28">        this.doctorFee = doctorFee;</span>
+<span class="nc" id="L29">        this.transactionStatus = transactionStatus;</span>
+<span class="nc" id="L30">    }</span>
+
+<span class="nc" id="L32">    public AppointDoctorTransaction(String txid, String doctorId, String doctorFee, Time appointmentTime, String transactionStatus) {</span>
+<span class="nc" id="L33">        this.txid = txid;</span>
+<span class="nc" id="L34">        this.doctorId = doctorId;</span>
+<span class="nc" id="L35">        this.doctorFee = doctorFee;</span>
+<span class="nc" id="L36">        this.appointmentTime = appointmentTime;</span>
+<span class="nc" id="L37">        this.transactionStatus = transactionStatus;</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public AppointDoctorTransaction() {</span>
+<span class="nc" id="L41">    }</span>
+
+    public long getId() {
+<span class="nc" id="L44">        return id;</span>
+    }
+
+    public void setId(long id) {
+<span class="nc" id="L48">        this.id = id;</span>
+<span class="nc" id="L49">    }</span>
+
+    public Time getAppointmentTime() {
+<span class="nc" id="L52">        return appointmentTime;</span>
+    }
+
+    public void setAppointmentTime(Time appointmentTime) {
+<span class="nc" id="L56">        this.appointmentTime = appointmentTime;</span>
+<span class="nc" id="L57">    }</span>
+
+    public String getTxid() {
+<span class="nc" id="L60">        return txid;</span>
+    }
+
+    public void setTxid(String txid) {
+<span class="nc" id="L64">        this.txid = txid;</span>
+<span class="nc" id="L65">    }</span>
+
+    public String getDoctorId() {
+<span class="nc" id="L68">        return doctorId;</span>
+    }
+
+    public void setDoctorId(String doctorId) {
+<span class="nc" id="L72">        this.doctorId = doctorId;</span>
+<span class="nc" id="L73">    }</span>
+
+    public String getDoctorFee() {
+<span class="nc" id="L76">        return doctorFee;</span>
+    }
+
+    public void setDoctorFee(String doctorFee) {
+<span class="nc" id="L80">        this.doctorFee = doctorFee;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getTransactionStatus() {
+<span class="nc" id="L84">        return transactionStatus;</span>
+    }
+
+    public void setTransactionStatus(String transactionStatus) {
+<span class="nc" id="L88">        this.transactionStatus = transactionStatus;</span>
+<span class="nc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
