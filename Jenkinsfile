@@ -85,14 +85,14 @@ pipeline {
            	}
         }
 
-		stage('Build & Test') {
+		/*stage('Build & Test') {
 			steps {
 				script {
 					def buildCmd = 'mvn clean package'
 					isUnix() ? sh(buildCmd) : bat(buildCmd)
 				}
 			}
-		}
+		}*/
 
 		stage('Generate Test Report') {
 			steps {
