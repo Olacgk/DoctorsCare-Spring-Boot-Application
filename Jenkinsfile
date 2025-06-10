@@ -85,14 +85,14 @@ pipeline {
            	}
         }
 
-		/*stage('Build & Test') {
+		stage('Build & Test') {
 			steps {
 				script {
 					def buildCmd = 'mvn clean package'
 					isUnix() ? sh(buildCmd) : bat(buildCmd)
 				}
 			}
-		}*/
+		}
 
 		stage('Generate Test Report') {
 			steps {
@@ -122,10 +122,10 @@ pipeline {
 
 				echo '⏳ Attente du démarrage'
 				script {
-							if (isUnix()) {
-								sh 'sleep 20'
+					if (isUnix()) {
+						sh 'sleep 20'
 					} else {
-								bat 'timeout /T 20 /NOBREAK'
+						bat 'timeout /T 20 /NOBREAK'
 					}
 				}
 			}
