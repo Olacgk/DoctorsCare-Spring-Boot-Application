@@ -32,7 +32,8 @@
                         </div>
                         <div class="credentials">
                             <h5>Dr. <span th:text="${user.getName()}"></span></h5>
-                            <p><span th:text="${user.getDoctorsAdditionalInfo().getDegrees()}"></span></p>
+                            <span th:if="${user != null and user.doctorsAdditionalInfo != null}" th:text="${user.doctorsAdditionalInfo.degrees}"></span>
+                            <span th:unless="${user != null and user.doctorsAdditionalInfo != null}">Pas de diplômes renseignés</span>
                             <small><span
                                     th:text="${user.getDoctorsAdditionalInfo().getMedicalcollege()}"> </span></small>
                             <br/>

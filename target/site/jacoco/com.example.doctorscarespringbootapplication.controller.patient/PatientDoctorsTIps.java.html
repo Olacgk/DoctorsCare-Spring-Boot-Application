@@ -126,19 +126,19 @@ import static com.example.doctorscarespringbootapplication.controller.doctor.Doc
 
 
     public static ResponseEntity&lt;Object&gt; getObjectResponseEntitySavePost(@RequestBody SavedPostsDTO savedPostsDTO, PostsRepository postsRepository, SavedPostsRepository savedPostsRepository) {
-<span class="nc" id="L129">        Posts posts = postsRepository.findById(Integer.parseInt(savedPostsDTO.getPostId()));</span>
-<span class="nc" id="L130">        SavedPosts savedPosts = null;</span>
-<span class="nc" id="L131">        savedPosts = savedPostsRepository.findByPostsIdAndSaverId(Integer.parseInt(savedPostsDTO.getPostId()), savedPostsDTO.getSaverId());</span>
-<span class="nc bnc" id="L132" title="All 2 branches missed.">        if (savedPosts == null) {</span>
-<span class="nc" id="L133">            List&lt;SavedPosts&gt; savedPostsList = savedPostsRepository.findByPostsId(Integer.parseInt(savedPostsDTO.getPostId()));</span>
-<span class="nc" id="L134">            SavedPosts savedPosts1 = new SavedPosts();</span>
-<span class="nc" id="L135">            savedPosts1.setSaverId(savedPostsDTO.getSaverId());</span>
-<span class="nc" id="L136">            savedPosts1.setPosts(posts);</span>
-<span class="nc" id="L137">            savedPostsList.add(savedPosts1);</span>
-<span class="nc" id="L138">            posts.setSavedPostsList(savedPostsList);</span>
-<span class="nc" id="L139">            postsRepository.save(posts);</span>
-<span class="nc" id="L140">            ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Saved&quot;);</span>
-<span class="nc" id="L141">            return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+<span class="fc" id="L129">        Posts posts = postsRepository.findById(Integer.parseInt(savedPostsDTO.getPostId()));</span>
+<span class="fc" id="L130">        SavedPosts savedPosts = null;</span>
+<span class="fc" id="L131">        savedPosts = savedPostsRepository.findByPostsIdAndSaverId(Integer.parseInt(savedPostsDTO.getPostId()), savedPostsDTO.getSaverId());</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (savedPosts == null) {</span>
+<span class="fc" id="L133">            List&lt;SavedPosts&gt; savedPostsList = savedPostsRepository.findByPostsId(Integer.parseInt(savedPostsDTO.getPostId()));</span>
+<span class="fc" id="L134">            SavedPosts savedPosts1 = new SavedPosts();</span>
+<span class="fc" id="L135">            savedPosts1.setSaverId(savedPostsDTO.getSaverId());</span>
+<span class="fc" id="L136">            savedPosts1.setPosts(posts);</span>
+<span class="fc" id="L137">            savedPostsList.add(savedPosts1);</span>
+<span class="fc" id="L138">            posts.setSavedPostsList(savedPostsList);</span>
+<span class="fc" id="L139">            postsRepository.save(posts);</span>
+<span class="fc" id="L140">            ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Saved&quot;);</span>
+<span class="fc" id="L141">            return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
         }
 <span class="nc" id="L143">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;Success Already Saved&quot;, &quot;Already Saved&quot;);</span>
 <span class="nc" id="L144">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
@@ -146,11 +146,11 @@ import static com.example.doctorscarespringbootapplication.controller.doctor.Doc
 
 
     public static ResponseEntity&lt;Object&gt; getObjectResponseEntityUnsavePost(@RequestBody UnsavePostDTO unsavePostDTO, SavedPostsRepository savedPostsRepository) {
-<span class="nc" id="L149">        System.out.println(&quot;Post ID -&gt; &quot; + unsavePostDTO.getPostId());</span>
-<span class="nc" id="L150">        System.out.println(&quot;Unsaver ID -&gt; &quot; + unsavePostDTO.getUnsaverId());</span>
-<span class="nc" id="L151">        savedPostsRepository.deleteByPostsIdAndSaverId(Integer.parseInt(unsavePostDTO.getPostId()), unsavePostDTO.getUnsaverId());</span>
-<span class="nc" id="L152">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Unsaved Successfully!&quot;);</span>
-<span class="nc" id="L153">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
+<span class="fc" id="L149">        System.out.println(&quot;Post ID -&gt; &quot; + unsavePostDTO.getPostId());</span>
+<span class="fc" id="L150">        System.out.println(&quot;Unsaver ID -&gt; &quot; + unsavePostDTO.getUnsaverId());</span>
+<span class="fc" id="L151">        savedPostsRepository.deleteByPostsIdAndSaverId(Integer.parseInt(unsavePostDTO.getPostId()), unsavePostDTO.getUnsaverId());</span>
+<span class="fc" id="L152">        ServiceResponse&lt;String&gt; response = new ServiceResponse&lt;String&gt;(&quot;success&quot;, &quot;Post Unsaved Successfully!&quot;);</span>
+<span class="fc" id="L153">        return new ResponseEntity&lt;Object&gt;(response, HttpStatus.OK);</span>
     }
 
 }

@@ -7,25 +7,25 @@ import java.util.Map;
 
 <span class="nc" id="L8">public class ParameterBuilder {</span>
     public static String getParamsString(Map&lt;String, String&gt; params, boolean urlEncode) throws UnsupportedEncodingException {
-<span class="nc" id="L10">        StringBuilder result = new StringBuilder();</span>
+<span class="fc" id="L10">        StringBuilder result = new StringBuilder();</span>
 
-<span class="nc bnc" id="L12" title="All 2 branches missed.">        for (Map.Entry&lt;String, String&gt; entry : params.entrySet()) {</span>
-<span class="nc bnc" id="L13" title="All 2 branches missed.">            if (urlEncode)</span>
+<span class="fc bfc" id="L12" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; entry : params.entrySet()) {</span>
+<span class="pc bpc" id="L13" title="1 of 2 branches missed.">            if (urlEncode)</span>
 <span class="nc" id="L14">                result.append(URLEncoder.encode(entry.getKey(), &quot;UTF-8&quot;));</span>
             else
-<span class="nc" id="L16">                result.append(entry.getKey());</span>
+<span class="fc" id="L16">                result.append(entry.getKey());</span>
 
-<span class="nc" id="L18">            result.append(&quot;=&quot;);</span>
-<span class="nc bnc" id="L19" title="All 2 branches missed.">            if (urlEncode)</span>
+<span class="fc" id="L18">            result.append(&quot;=&quot;);</span>
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">            if (urlEncode)</span>
 <span class="nc" id="L20">                result.append(URLEncoder.encode(entry.getValue(), &quot;UTF-8&quot;));</span>
             else
-<span class="nc" id="L22">                result.append(entry.getValue());</span>
-<span class="nc" id="L23">            result.append(&quot;&amp;&quot;);</span>
-<span class="nc" id="L24">        }</span>
+<span class="fc" id="L22">                result.append(entry.getValue());</span>
+<span class="fc" id="L23">            result.append(&quot;&amp;&quot;);</span>
+<span class="fc" id="L24">        }</span>
 
-<span class="nc" id="L26">        String resultString = result.toString();</span>
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        return resultString.length() &gt; 0</span>
-<span class="nc" id="L28">                ? resultString.substring(0, resultString.length() - 1)</span>
+<span class="fc" id="L26">        String resultString = result.toString();</span>
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">        return resultString.length() &gt; 0</span>
+<span class="fc" id="L28">                ? resultString.substring(0, resultString.length() - 1)</span>
 <span class="nc" id="L29">                : resultString;</span>
     }
 

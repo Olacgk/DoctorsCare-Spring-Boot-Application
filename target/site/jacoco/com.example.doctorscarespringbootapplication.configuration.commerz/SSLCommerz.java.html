@@ -33,10 +33,10 @@ public class SSLCommerz {
     private String generateHash;
     private String error;
 
-<span class="nc" id="L36">    private String sslczURL = &quot;https://securepay.sslcommerz.com/&quot;;</span>
-<span class="nc" id="L37">    private String submitURL = &quot;gwprocess/v3/api.php&quot;;</span>
-<span class="nc" id="L38">    private String validationURL = &quot;validator/api/validationserverAPI.php&quot;;</span>
-<span class="nc" id="L39">    private String checkingURL = &quot;validator/api/merchantTransIDvalidationAPI.php&quot;;</span>
+<span class="fc" id="L36">    private String sslczURL = &quot;https://securepay.sslcommerz.com/&quot;;</span>
+<span class="fc" id="L37">    private String submitURL = &quot;gwprocess/v3/api.php&quot;;</span>
+<span class="fc" id="L38">    private String validationURL = &quot;validator/api/validationserverAPI.php&quot;;</span>
+<span class="fc" id="L39">    private String checkingURL = &quot;validator/api/merchantTransIDvalidationAPI.php&quot;;</span>
 
     /****
      *
@@ -48,15 +48,15 @@ public class SSLCommerz {
      *  Store_Test_Mode is to define whether user is testing this or not.
      * @throws Exception
      */
-<span class="nc" id="L51">    public SSLCommerz(String Store_ID, String Store_Pass, boolean Store_Test_Mode) throws Exception {</span>
-<span class="nc bnc" id="L52" title="All 4 branches missed.">        if (!Store_ID.isEmpty() &amp;&amp; !Store_Pass.isEmpty()) {</span>
-<span class="nc" id="L53">            this.storeId = Store_ID;</span>
-<span class="nc" id="L54">            this.storePass = Store_Pass;</span>
-<span class="nc" id="L55">            this.setSSLCzTestMode(Store_Test_Mode);</span>
+<span class="fc" id="L51">    public SSLCommerz(String Store_ID, String Store_Pass, boolean Store_Test_Mode) throws Exception {</span>
+<span class="pc bpc" id="L52" title="2 of 4 branches missed.">        if (!Store_ID.isEmpty() &amp;&amp; !Store_Pass.isEmpty()) {</span>
+<span class="fc" id="L53">            this.storeId = Store_ID;</span>
+<span class="fc" id="L54">            this.storePass = Store_Pass;</span>
+<span class="fc" id="L55">            this.setSSLCzTestMode(Store_Test_Mode);</span>
         } else {
 <span class="nc" id="L57">            throw new Exception(&quot;Please provide Store ID and Password to initialize SSLCommerz&quot;);</span>
         }
-<span class="nc" id="L59">    }</span>
+<span class="fc" id="L59">    }</span>
 
     /***
      *
@@ -64,15 +64,15 @@ public class SSLCommerz {
      * storeTestMode defines user Testing mode and sets test id, password and sandbox URL
      */
     private void setSSLCzTestMode(boolean storeTestMode) {
-<span class="nc" id="L67">        this.storeTestMode = storeTestMode;</span>
+<span class="fc" id="L67">        this.storeTestMode = storeTestMode;</span>
 
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (storeTestMode) {</span>
-<span class="nc" id="L70">            this.storeId = &quot;docto62f28257d4314&quot;;</span>
-<span class="nc" id="L71">            this.storePass = &quot;docto62f28257d4314@ssl&quot;;</span>
-<span class="nc" id="L72">            this.sslczURL = &quot;https://sandbox.sslcommerz.com/&quot;;</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (storeTestMode) {</span>
+<span class="fc" id="L70">            this.storeId = &quot;docto62f28257d4314&quot;;</span>
+<span class="fc" id="L71">            this.storePass = &quot;docto62f28257d4314@ssl&quot;;</span>
+<span class="fc" id="L72">            this.sslczURL = &quot;https://sandbox.sslcommerz.com/&quot;;</span>
         }
 
-<span class="nc" id="L75">    }</span>
+<span class="fc" id="L75">    }</span>
 
     /**
      * @param postData         postData is a Map with String Key and String value.
@@ -160,8 +160,8 @@ public class SSLCommerz {
      */
     boolean orderValidate(String merchantTrnxnId, String merchantTrnxnAmount, String merchantTrnxnCurrency,
                           Map&lt;String, String&gt; requestParameters) throws IOException, NoSuchAlgorithmException {
-<span class="nc" id="L163">        boolean hash_verified = this.ipnHashVerify(requestParameters);</span>
-<span class="nc bnc" id="L164" title="All 2 branches missed.">        if (hash_verified) {</span>
+<span class="fc" id="L163">        boolean hash_verified = this.ipnHashVerify(requestParameters);</span>
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (hash_verified) {</span>
 
 <span class="nc" id="L166">            String EncodedValID = URLEncoder.encode(requestParameters.get(&quot;val_id&quot;), Charset.forName(&quot;UTF-8&quot;).displayName());</span>
 <span class="nc" id="L167">            String EncodedStoreID = URLEncoder.encode(this.storeId, Charset.forName(&quot;UTF-8&quot;).displayName());</span>
@@ -197,8 +197,8 @@ public class SSLCommerz {
 
             }
         } else {
-<span class="nc" id="L200">            this.error = &quot;Unable to verify hash&quot;;</span>
-<span class="nc" id="L201">            return false;</span>
+<span class="fc" id="L200">            this.error = &quot;Unable to verify hash&quot;;</span>
+<span class="fc" id="L201">            return false;</span>
         }
     }
 
@@ -213,36 +213,36 @@ public class SSLCommerz {
     private Boolean ipnHashVerify(final Map&lt;String, String&gt; requestParameters) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
         // Check For verify_sign and verify_key parameters
-<span class="nc bnc" id="L216" title="All 4 branches missed.">        if (!requestParameters.get(&quot;verify_sign&quot;).isEmpty() &amp;&amp; !requestParameters.get(&quot;verify_key&quot;).isEmpty()) {</span>
+<span class="pc bpc" id="L216" title="2 of 4 branches missed.">        if (!requestParameters.get(&quot;verify_sign&quot;).isEmpty() &amp;&amp; !requestParameters.get(&quot;verify_key&quot;).isEmpty()) {</span>
             // Get the verify key
-<span class="nc" id="L218">            String verify_key = requestParameters.get(&quot;verify_key&quot;);</span>
-<span class="nc bnc" id="L219" title="All 2 branches missed.">            if (!verify_key.isEmpty()) {</span>
+<span class="fc" id="L218">            String verify_key = requestParameters.get(&quot;verify_key&quot;);</span>
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">            if (!verify_key.isEmpty()) {</span>
 
                 // Split key String by comma to make a list array
-<span class="nc" id="L222">                keyList = verify_key.split(&quot;,&quot;);</span>
-<span class="nc" id="L223">                TreeMap&lt;String, String&gt; sortedMap = new TreeMap&lt;String, String&gt;();</span>
+<span class="fc" id="L222">                keyList = verify_key.split(&quot;,&quot;);</span>
+<span class="fc" id="L223">                TreeMap&lt;String, String&gt; sortedMap = new TreeMap&lt;String, String&gt;();</span>
 
                 // Store key and value of post in a sorted Map
-<span class="nc bnc" id="L226" title="All 2 branches missed.">                for (final String k : keyList) {</span>
-<span class="nc" id="L227">                    sortedMap.put(k, requestParameters.get(k));</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">                for (final String k : keyList) {</span>
+<span class="fc" id="L227">                    sortedMap.put(k, requestParameters.get(k));</span>
                 }
 
                 // Store Hashed Password in list
-<span class="nc" id="L231">                final String hashedPass = this.md5(this.storePass);</span>
-<span class="nc" id="L232">                sortedMap.put(&quot;store_passwd&quot;, hashedPass);</span>
+<span class="fc" id="L231">                final String hashedPass = this.md5(this.storePass);</span>
+<span class="fc" id="L232">                sortedMap.put(&quot;store_passwd&quot;, hashedPass);</span>
                 // Concat and make String from array
-<span class="nc" id="L234">                String hashString = &quot;&quot;;</span>
-<span class="nc" id="L235">                hashString += ParameterBuilder.getParamsString(sortedMap, false) + &quot;&amp;&quot;;</span>
+<span class="fc" id="L234">                String hashString = &quot;&quot;;</span>
+<span class="fc" id="L235">                hashString += ParameterBuilder.getParamsString(sortedMap, false) + &quot;&amp;&quot;;</span>
 
                 // Trim '&amp;' from end of this String
-<span class="nc" id="L238">                hashString = hashString.substring(0, hashString.length() - 1); // omitting last &amp;</span>
+<span class="fc" id="L238">                hashString = hashString.substring(0, hashString.length() - 1); // omitting last &amp;</span>
 
                 // Make hash by hash_string and store
-<span class="nc" id="L241">                generateHash = this.md5(hashString);</span>
+<span class="fc" id="L241">                generateHash = this.md5(hashString);</span>
 
                 // Check if generated hash and verify_sign match or not
                 // Matched
-<span class="nc" id="L245">                return generateHash.equals(requestParameters.get(&quot;verify_sign&quot;));</span>
+<span class="fc" id="L245">                return generateHash.equals(requestParameters.get(&quot;verify_sign&quot;));</span>
             }
 
 <span class="nc" id="L248">            return false;</span>
@@ -257,14 +257,14 @@ public class SSLCommerz {
     /// &lt;param name=&quot;s&quot;&gt;&lt;/param&gt;
     /// &lt;returns&gt;md5 Hashed String&lt;/returns&gt;
     private String md5(String s) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-<span class="nc" id="L260">        byte[] bytesOfMessage = s.getBytes(&quot;UTF-8&quot;);</span>
-<span class="nc" id="L261">        MessageDigest md = MessageDigest.getInstance(&quot;MD5&quot;);</span>
-<span class="nc" id="L262">        byte[] theDigest = md.digest(bytesOfMessage);</span>
-<span class="nc" id="L263">        StringBuffer sb = new StringBuffer();</span>
-<span class="nc bnc" id="L264" title="All 2 branches missed.">        for (int i = 0; i &lt; theDigest.length; ++i) {</span>
-<span class="nc" id="L265">            sb.append(Integer.toHexString((theDigest[i] &amp; 0xFF) | 0x100).substring(1, 3));</span>
+<span class="fc" id="L260">        byte[] bytesOfMessage = s.getBytes(&quot;UTF-8&quot;);</span>
+<span class="fc" id="L261">        MessageDigest md = MessageDigest.getInstance(&quot;MD5&quot;);</span>
+<span class="fc" id="L262">        byte[] theDigest = md.digest(bytesOfMessage);</span>
+<span class="fc" id="L263">        StringBuffer sb = new StringBuffer();</span>
+<span class="fc bfc" id="L264" title="All 2 branches covered.">        for (int i = 0; i &lt; theDigest.length; ++i) {</span>
+<span class="fc" id="L265">            sb.append(Integer.toHexString((theDigest[i] &amp; 0xFF) | 0x100).substring(1, 3));</span>
         }
-<span class="nc" id="L267">        return sb.toString();</span>
+<span class="fc" id="L267">        return sb.toString();</span>
 
     }
 }

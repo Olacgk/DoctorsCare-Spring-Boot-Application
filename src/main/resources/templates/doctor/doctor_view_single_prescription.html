@@ -21,7 +21,7 @@
                         </div>
                         <div class="credentials">
                             <h5>Dr. <span th:text="${user.getName()}"></span></h5>
-                            <p><span th:text="${user.getDoctorsAdditionalInfo().getDegrees()}"></span></p>
+                            <span th:text="${user.doctorsAdditionalInfo?.degrees}">N/A</span>
                             <small><span
                                     th:text="${user.getDoctorsAdditionalInfo().getMedicalcollege()}"> </span></small>
                             <br/>
@@ -46,18 +46,21 @@
                         <div class="symptoms">
                             <h5 class="d-header">Symptoms</h5>
                             <textarea readonly th:name="symptoms"
-                                      th:text="${appointDoctor.getPrescription().getSymptoms()}"
-                                      class="form-control bg-white" rows="6" cols="20" style="padding: 15px"></textarea>
+                                      th:text="${appointDoctor.prescription?.symptoms}"
+                                      class="form-control bg-white" rows="6" cols="20" style="padding: 15px">Aucun symptôme</textarea>
                         </div>
                         <div class="tests">
                             <h5 class="d-header">Tests</h5>
-                            <textarea readonly th:name="tests" th:text="${appointDoctor.getPrescription().getTests()}"
-                                      class="form-control bg-white" rows="6" cols="20" style="padding: 15px"></textarea>
+                            <textarea readonly th:name="symptoms"
+                                      th:text="${appointDoctor.prescription?.symptoms}"
+                                      class="form-control bg-white" rows="6" cols="20" style="padding: 15px">Aucun symptôme</textarea>
+
                         </div>
                         <div class="advice">
                             <h5 class="d-header">Advice</h5>
-                            <textarea readonly th:name="advice" th:text="${appointDoctor.getPrescription().getAdvice()}"
-                                      class="form-control bg-white" rows="6" cols="20" style="padding: 15px"></textarea>
+                            <textarea readonly th:name="advice"
+                                      th:text="${appointDoctor.prescription?.advice}"
+                                      class="form-control bg-white" rows="6" cols="20" style="padding: 15px">Aucun conseil</textarea>
                         </div>
                     </div>
                 </td>
@@ -67,9 +70,8 @@
                     <hr/>
                     <div class="medicine">
                         <textarea readonly th:name="medicines"
-                                  th:text="${appointDoctor.getPrescription().getMedicines()}"
-                                  class="form-control bg-white" aria-label="With textarea" rows="15" cols="20"
-                                  style="padding: 15px"></textarea>
+                                  th:text="${appointDoctor.prescription?.medicines}"
+                                  class="form-control bg-white" rows="6" cols="20" style="padding: 15px">Aucun médicament</textarea>
                         <span style="margin-top: 30px; text-align: right;">
 						Prescribed By
                         <hr style="border-top: 2px dashed black; margin-left: 220px;">

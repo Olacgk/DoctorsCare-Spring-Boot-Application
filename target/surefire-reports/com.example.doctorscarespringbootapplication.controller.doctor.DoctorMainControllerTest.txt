@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.doctorscarespringbootapplication.controller.doctor.DoctorMainControllerTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.251 s - in com.example.doctorscarespringbootapplication.controller.doctor.DoctorMainControllerTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.115 s - in com.example.doctorscarespringbootapplication.controller.doctor.DoctorMainControllerTest
