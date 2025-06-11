@@ -1,0 +1,6 @@
+projectKey=Tp-securite
+serverUrl=http://localhost:9000
+serverVersion=25.6.0.109173
+dashboardUrl=http://localhost:9000/dashboard?id=Tp-securite
+ceTaskId=699ce059-f63b-4937-b322-452cd9c0feeb
+ceTaskUrl=http://localhost:9000/api/ce/task?id=699ce059-f63b-4937-b322-452cd9c0feeb
