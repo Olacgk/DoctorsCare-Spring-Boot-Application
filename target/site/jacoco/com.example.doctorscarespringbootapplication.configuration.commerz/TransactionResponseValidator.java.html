@@ -7,7 +7,7 @@ import java.util.Map;
  * Validates those parameters fetched from payment page response and returns true for successful transaction
  * and false otherwise.
  */
-<span class="nc" id="L10">public class TransactionResponseValidator {</span>
+<span class="fc" id="L10">public class TransactionResponseValidator {</span>
     /**
      * @param request
      * @return
@@ -15,21 +15,21 @@ import java.util.Map;
      */
     public boolean receiveSuccessResponse(Map&lt;String, String&gt; request) throws Exception {
 
-<span class="nc" id="L18">        String trxId = request.get(&quot;tran_id&quot;);</span>
+<span class="fc" id="L18">        String trxId = request.get(&quot;tran_id&quot;);</span>
         /**
          *Get your AMOUNT and Currency FROM DB to initiate this Transaction
          */
-<span class="nc" id="L22">        String amount = &quot;150&quot;;</span>
-<span class="nc" id="L23">        String currency = &quot;BDT&quot;;</span>
+<span class="fc" id="L22">        String amount = &quot;150&quot;;</span>
+<span class="fc" id="L23">        String currency = &quot;BDT&quot;;</span>
         // Set your store Id and store password and define TestMode
-<span class="nc" id="L25">        SSLCommerz sslcz = new SSLCommerz(&quot;docto62f28257d4314&quot;, &quot;docto62f28257d4314@ssl&quot;, true);</span>
+<span class="fc" id="L25">        SSLCommerz sslcz = new SSLCommerz(&quot;docto62f28257d4314&quot;, &quot;docto62f28257d4314@ssl&quot;, true);</span>
 
         /**
          * If following order validation returns true, then process transaction as success.
          * if this following validation returns false , then query status if failed of canceled.
          *      Check request.get(&quot;status&quot;) for this purpose
          */
-<span class="nc" id="L32">        return sslcz.orderValidate(trxId, amount, currency, request);</span>
+<span class="fc" id="L32">        return sslcz.orderValidate(trxId, amount, currency, request);</span>
 
     }
 }

@@ -18,7 +18,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping(&quot;/doctor&quot;)
-<span class="nc" id="L21">public class DoctorPrescription {</span>
+<span class="fc" id="L21">public class DoctorPrescription {</span>
 
     @Autowired
     private UserRepository userRepository;
@@ -28,57 +28,57 @@ import java.security.Principal;
 
     @PostMapping(&quot;/give-prescription&quot;)
     public String givePrescription(@RequestParam String appointmentID, Model model, Principal principal) {
-<span class="nc" id="L31">        model.addAttribute(&quot;title&quot;, &quot;Give Prescription&quot;);</span>
-<span class="nc" id="L32">        model.addAttribute(&quot;appointmentID&quot;, appointmentID);</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (!appointmentID.isEmpty()) {</span>
-<span class="nc" id="L34">            AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(appointmentID));</span>
-<span class="nc" id="L35">            User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
-<span class="nc" id="L36">            model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
-<span class="nc" id="L37">            DoctorGivePrescriptionDTO doctorGivePrescriptionDTO = new DoctorGivePrescriptionDTO();</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (appointDoctor.getPrescription() != null) {</span>
-<span class="nc" id="L39">                doctorGivePrescriptionDTO.setSymptoms(appointDoctor.getPrescription().getSymptoms());</span>
-<span class="nc" id="L40">                doctorGivePrescriptionDTO.setTests(appointDoctor.getPrescription().getTests());</span>
-<span class="nc" id="L41">                doctorGivePrescriptionDTO.setAdvice(appointDoctor.getPrescription().getAdvice());</span>
-<span class="nc" id="L42">                doctorGivePrescriptionDTO.setMedicines(appointDoctor.getPrescription().getMedicines());</span>
+<span class="fc" id="L31">        model.addAttribute(&quot;title&quot;, &quot;Give Prescription&quot;);</span>
+<span class="fc" id="L32">        model.addAttribute(&quot;appointmentID&quot;, appointmentID);</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (!appointmentID.isEmpty()) {</span>
+<span class="fc" id="L34">            AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(appointmentID));</span>
+<span class="fc" id="L35">            User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
+<span class="fc" id="L36">            model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
+<span class="fc" id="L37">            DoctorGivePrescriptionDTO doctorGivePrescriptionDTO = new DoctorGivePrescriptionDTO();</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            if (appointDoctor.getPrescription() != null) {</span>
+<span class="fc" id="L39">                doctorGivePrescriptionDTO.setSymptoms(appointDoctor.getPrescription().getSymptoms());</span>
+<span class="fc" id="L40">                doctorGivePrescriptionDTO.setTests(appointDoctor.getPrescription().getTests());</span>
+<span class="fc" id="L41">                doctorGivePrescriptionDTO.setAdvice(appointDoctor.getPrescription().getAdvice());</span>
+<span class="fc" id="L42">                doctorGivePrescriptionDTO.setMedicines(appointDoctor.getPrescription().getMedicines());</span>
             }
-<span class="nc" id="L44">            model.addAttribute(&quot;doctorGivePrescriptionDTO&quot;, doctorGivePrescriptionDTO);</span>
-<span class="nc" id="L45">        } else {</span>
+<span class="fc" id="L44">            model.addAttribute(&quot;doctorGivePrescriptionDTO&quot;, doctorGivePrescriptionDTO);</span>
+<span class="fc" id="L45">        } else {</span>
             // If you don't have current appointment then you can't give prescription
-<span class="nc" id="L47">            model.addAttribute(&quot;noAppointment&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L47">            model.addAttribute(&quot;noAppointment&quot;, &quot;true&quot;);</span>
         }
-<span class="nc" id="L49">        addCommonData(model, principal);</span>
-<span class="nc" id="L50">        return &quot;doctor/doctor_give_prescription&quot;;</span>
+<span class="fc" id="L49">        addCommonData(model, principal);</span>
+<span class="fc" id="L50">        return &quot;doctor/doctor_give_prescription&quot;;</span>
     }
 
     @PostMapping(&quot;/save-prescription&quot;)
     public String savePrescription(@ModelAttribute DoctorGivePrescriptionDTO doctorGivePrescriptionDTO, Model model, Principal principal) {
-<span class="nc" id="L55">        model.addAttribute(&quot;title&quot;, &quot;Save Prescription&quot;);</span>
-<span class="nc" id="L56">        model.addAttribute(&quot;appointmentID&quot;, doctorGivePrescriptionDTO.getAppointmentID());</span>
-<span class="nc" id="L57">        model.addAttribute(&quot;doctorGivePrescriptionDTO&quot;, doctorGivePrescriptionDTO);</span>
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (!doctorGivePrescriptionDTO.getAppointmentID().isEmpty()) {</span>
-<span class="nc" id="L59">            AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(doctorGivePrescriptionDTO.getAppointmentID()));</span>
-<span class="nc" id="L60">            User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
-<span class="nc" id="L61">            Prescription prescription = new Prescription(doctorGivePrescriptionDTO.getSymptoms(), doctorGivePrescriptionDTO.getTests(), doctorGivePrescriptionDTO.getAdvice(), doctorGivePrescriptionDTO.getMedicines());</span>
-<span class="nc" id="L62">            prescription.setId(appointDoctor.getId());</span>
-<span class="nc" id="L63">            appointDoctor.setPrescription(prescription);</span>
-<span class="nc" id="L64">            prescription.setAppointDoctor(appointDoctor);</span>
-<span class="nc" id="L65">            appointDoctorRepository.save(appointDoctor);</span>
-<span class="nc" id="L66">            model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
-<span class="nc" id="L67">        } else {</span>
+<span class="fc" id="L55">        model.addAttribute(&quot;title&quot;, &quot;Save Prescription&quot;);</span>
+<span class="fc" id="L56">        model.addAttribute(&quot;appointmentID&quot;, doctorGivePrescriptionDTO.getAppointmentID());</span>
+<span class="fc" id="L57">        model.addAttribute(&quot;doctorGivePrescriptionDTO&quot;, doctorGivePrescriptionDTO);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!doctorGivePrescriptionDTO.getAppointmentID().isEmpty()) {</span>
+<span class="fc" id="L59">            AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(doctorGivePrescriptionDTO.getAppointmentID()));</span>
+<span class="fc" id="L60">            User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
+<span class="fc" id="L61">            Prescription prescription = new Prescription(doctorGivePrescriptionDTO.getSymptoms(), doctorGivePrescriptionDTO.getTests(), doctorGivePrescriptionDTO.getAdvice(), doctorGivePrescriptionDTO.getMedicines());</span>
+<span class="fc" id="L62">            prescription.setId(appointDoctor.getId());</span>
+<span class="fc" id="L63">            appointDoctor.setPrescription(prescription);</span>
+<span class="fc" id="L64">            prescription.setAppointDoctor(appointDoctor);</span>
+<span class="fc" id="L65">            appointDoctorRepository.save(appointDoctor);</span>
+<span class="fc" id="L66">            model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
+<span class="fc" id="L67">        } else {</span>
             // If you don't have current appointment then you can't give prescription
-<span class="nc" id="L69">            model.addAttribute(&quot;noAppointment&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L69">            model.addAttribute(&quot;noAppointment&quot;, &quot;true&quot;);</span>
         }
-<span class="nc" id="L71">        model.addAttribute(&quot;prescriptionSaved&quot;, &quot;true&quot;);</span>
-<span class="nc" id="L72">        addCommonData(model, principal);</span>
-<span class="nc" id="L73">        return &quot;doctor/doctor_give_prescription&quot;;</span>
+<span class="fc" id="L71">        model.addAttribute(&quot;prescriptionSaved&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L72">        addCommonData(model, principal);</span>
+<span class="fc" id="L73">        return &quot;doctor/doctor_give_prescription&quot;;</span>
     }
 
     @ModelAttribute
     public void addCommonData(Model model, Principal principal) {
-<span class="nc" id="L78">        String userEmail = principal.getName();</span>
-<span class="nc" id="L79">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
-<span class="nc" id="L80">        model.addAttribute(&quot;user&quot;, user);</span>
-<span class="nc" id="L81">    }</span>
+<span class="fc" id="L78">        String userEmail = principal.getName();</span>
+<span class="fc" id="L79">        User user = this.userRepository.getUserByEmailNative(userEmail);</span>
+<span class="fc" id="L80">        model.addAttribute(&quot;user&quot;, user);</span>
+<span class="fc" id="L81">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

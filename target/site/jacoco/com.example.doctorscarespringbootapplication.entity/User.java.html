@@ -7,6 +7,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+
 @Entity
 public class User {
 
@@ -57,169 +58,169 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = &quot;user&quot;)
     private AccountActiveToken accountActiveToken;
 
-<span class="fc" id="L60">    public User() {</span>
-<span class="fc" id="L61">    }</span>
+<span class="fc" id="L61">    public User() {</span>
+<span class="fc" id="L62">    }</span>
 
 
 
-<span class="nc" id="L65">    public User(int id, String name, String email, String password, String role, boolean enabled, String imageURL, String about) {</span>
-<span class="nc" id="L66">        this.id = id;</span>
-<span class="nc" id="L67">        this.name = name;</span>
-<span class="nc" id="L68">        this.email = email;</span>
-<span class="nc" id="L69">        this.password = password;</span>
-<span class="nc" id="L70">        this.role = role;</span>
-<span class="nc" id="L71">        this.enabled = enabled;</span>
-<span class="nc" id="L72">        this.imageURL = imageURL;</span>
-<span class="nc" id="L73">        this.about = about;</span>
-<span class="nc" id="L74">    }</span>
+<span class="nc" id="L66">    public User(int id, String name, String email, String password, String role, boolean enabled, String imageURL, String about) {</span>
+<span class="nc" id="L67">        this.id = id;</span>
+<span class="nc" id="L68">        this.name = name;</span>
+<span class="nc" id="L69">        this.email = email;</span>
+<span class="nc" id="L70">        this.password = password;</span>
+<span class="nc" id="L71">        this.role = role;</span>
+<span class="nc" id="L72">        this.enabled = enabled;</span>
+<span class="nc" id="L73">        this.imageURL = imageURL;</span>
+<span class="nc" id="L74">        this.about = about;</span>
+<span class="nc" id="L75">    }</span>
 
-<span class="nc" id="L76">    public User(int id, String name, String email, String password, String about, String role, boolean enabled, String imageURL, String DOB, String phone, String address, DoctorsAdditionalInfo doctorsAdditionalInfo) {</span>
-<span class="nc" id="L77">        this.id = id;</span>
-<span class="nc" id="L78">        this.name = name;</span>
-<span class="nc" id="L79">        this.email = email;</span>
-<span class="nc" id="L80">        this.password = password;</span>
-<span class="nc" id="L81">        this.about = about;</span>
-<span class="nc" id="L82">        this.role = role;</span>
-<span class="nc" id="L83">        this.enabled = enabled;</span>
-<span class="nc" id="L84">        this.imageURL = imageURL;</span>
-<span class="nc" id="L85">        this.DOB = DOB;</span>
-<span class="nc" id="L86">        this.phone = phone;</span>
-<span class="nc" id="L87">        this.address = address;</span>
-<span class="nc" id="L88">        this.doctorsAdditionalInfo = doctorsAdditionalInfo;</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L77">    public User(int id, String name, String email, String password, String about, String role, boolean enabled, String imageURL, String DOB, String phone, String address, DoctorsAdditionalInfo doctorsAdditionalInfo) {</span>
+<span class="nc" id="L78">        this.id = id;</span>
+<span class="nc" id="L79">        this.name = name;</span>
+<span class="nc" id="L80">        this.email = email;</span>
+<span class="nc" id="L81">        this.password = password;</span>
+<span class="nc" id="L82">        this.about = about;</span>
+<span class="nc" id="L83">        this.role = role;</span>
+<span class="nc" id="L84">        this.enabled = enabled;</span>
+<span class="nc" id="L85">        this.imageURL = imageURL;</span>
+<span class="nc" id="L86">        this.DOB = DOB;</span>
+<span class="nc" id="L87">        this.phone = phone;</span>
+<span class="nc" id="L88">        this.address = address;</span>
+<span class="nc" id="L89">        this.doctorsAdditionalInfo = doctorsAdditionalInfo;</span>
+<span class="nc" id="L90">    }</span>
 
-<span class="nc" id="L91">    public User(String name, String email, String password, String about, String DOB, String phone, String address) {</span>
-<span class="nc" id="L92">        this.name = name;</span>
-<span class="nc" id="L93">        this.email = email;</span>
-<span class="nc" id="L94">        this.password = password;</span>
-<span class="nc" id="L95">        this.about = about;</span>
+<span class="nc" id="L92">    public User(String name, String email, String password, String about, String DOB, String phone, String address) {</span>
+<span class="nc" id="L93">        this.name = name;</span>
+<span class="nc" id="L94">        this.email = email;</span>
+<span class="nc" id="L95">        this.password = password;</span>
+<span class="nc" id="L96">        this.about = about;</span>
 //        this.role = role;
 //        this.enabled = enabled;
 //        this.imageURL = imageURL;
-<span class="nc" id="L99">        this.DOB = DOB;</span>
-<span class="nc" id="L100">        this.phone = phone;</span>
-<span class="nc" id="L101">        this.address = address;</span>
-<span class="nc" id="L102">    }</span>
+<span class="nc" id="L100">        this.DOB = DOB;</span>
+<span class="nc" id="L101">        this.phone = phone;</span>
+<span class="nc" id="L102">        this.address = address;</span>
+<span class="nc" id="L103">    }</span>
 
     public String getDOB() {
-<span class="fc" id="L105">        return DOB;</span>
+<span class="fc" id="L106">        return DOB;</span>
     }
 
     public void setDOB(String DOB) {
-<span class="nc" id="L109">        this.DOB = DOB;</span>
-<span class="nc" id="L110">    }</span>
+<span class="nc" id="L110">        this.DOB = DOB;</span>
+<span class="nc" id="L111">    }</span>
 
     public String getPhone() {
-<span class="fc" id="L113">        return phone;</span>
+<span class="fc" id="L114">        return phone;</span>
     }
 
     public void setPhone(String phone) {
-<span class="nc" id="L117">        this.phone = phone;</span>
-<span class="nc" id="L118">    }</span>
+<span class="nc" id="L118">        this.phone = phone;</span>
+<span class="nc" id="L119">    }</span>
 
     public String getAddress() {
-<span class="fc" id="L121">        return address;</span>
+<span class="fc" id="L122">        return address;</span>
     }
 
     public void setAddress(String address) {
-<span class="nc" id="L125">        this.address = address;</span>
-<span class="nc" id="L126">    }</span>
+<span class="nc" id="L126">        this.address = address;</span>
+<span class="nc" id="L127">    }</span>
 
     public DoctorsAdditionalInfo getDoctorsAdditionalInfo() {
-<span class="nc" id="L129">        return doctorsAdditionalInfo;</span>
+<span class="fc" id="L130">        return doctorsAdditionalInfo;</span>
     }
 
     public void setDoctorsAdditionalInfo(DoctorsAdditionalInfo doctorsAdditionalInfo) {
-<span class="nc" id="L133">        this.doctorsAdditionalInfo = doctorsAdditionalInfo;</span>
-<span class="nc" id="L134">    }</span>
+<span class="fc" id="L134">        this.doctorsAdditionalInfo = doctorsAdditionalInfo;</span>
+<span class="fc" id="L135">    }</span>
 
     public AccountActiveToken getAccountActiveToken() {
-<span class="nc" id="L137">        return accountActiveToken;</span>
+<span class="nc" id="L138">        return accountActiveToken;</span>
     }
 
     public void setAccountActiveToken(AccountActiveToken accountActiveToken) {
-<span class="nc" id="L141">        this.accountActiveToken = accountActiveToken;</span>
-<span class="nc" id="L142">    }</span>
+<span class="nc" id="L142">        this.accountActiveToken = accountActiveToken;</span>
+<span class="nc" id="L143">    }</span>
 
     public int getId() {
-<span class="fc" id="L145">        return id;</span>
+<span class="fc" id="L146">        return id;</span>
     }
 
     public void setId(int id) {
-<span class="fc" id="L149">        this.id = id;</span>
-<span class="fc" id="L150">    }</span>
+<span class="fc" id="L150">        this.id = id;</span>
+<span class="fc" id="L151">    }</span>
 
     public String getName() {
-<span class="fc" id="L153">        return name;</span>
+<span class="fc" id="L154">        return name;</span>
     }
 
     public void setName(String name) {
-<span class="fc" id="L157">        this.name = name;</span>
-<span class="fc" id="L158">    }</span>
+<span class="fc" id="L158">        this.name = name;</span>
+<span class="fc" id="L159">    }</span>
 
     public String getEmail() {
-<span class="fc" id="L161">        return email;</span>
+<span class="fc" id="L162">        return email;</span>
     }
 
     public void setEmail(String email) {
-<span class="fc" id="L165">        this.email = email;</span>
-<span class="fc" id="L166">    }</span>
+<span class="fc" id="L166">        this.email = email;</span>
+<span class="fc" id="L167">    }</span>
 
     public String getPassword() {
-<span class="nc" id="L169">        return password;</span>
+<span class="nc" id="L170">        return password;</span>
     }
 
     public void setPassword(String password) {
-<span class="nc" id="L173">        this.password = password;</span>
-<span class="nc" id="L174">    }</span>
+<span class="nc" id="L174">        this.password = password;</span>
+<span class="nc" id="L175">    }</span>
 
     public String getRole() {
-<span class="fc" id="L177">        return role;</span>
+<span class="fc" id="L178">        return role;</span>
     }
 
     public void setRole(String role) {
-<span class="fc" id="L181">        this.role = role;</span>
-<span class="fc" id="L182">    }</span>
+<span class="fc" id="L182">        this.role = role;</span>
+<span class="fc" id="L183">    }</span>
 
     public boolean isEnabled() {
-<span class="fc" id="L185">        return enabled;</span>
+<span class="fc" id="L186">        return enabled;</span>
     }
 
     public void setEnabled(boolean enabled) {
-<span class="fc" id="L189">        this.enabled = enabled;</span>
-<span class="fc" id="L190">    }</span>
+<span class="fc" id="L190">        this.enabled = enabled;</span>
+<span class="fc" id="L191">    }</span>
 
     public String getImageURL() {
-<span class="fc" id="L193">        return imageURL;</span>
+<span class="fc" id="L194">        return imageURL;</span>
     }
 
     public void setImageURL(String imageURL) {
-<span class="fc" id="L197">        this.imageURL = imageURL;</span>
-<span class="fc" id="L198">    }</span>
+<span class="fc" id="L198">        this.imageURL = imageURL;</span>
+<span class="fc" id="L199">    }</span>
 
     public String getAbout() {
-<span class="fc" id="L201">        return about;</span>
+<span class="fc" id="L202">        return about;</span>
     }
 
     public void setAbout(String about) {
-<span class="nc" id="L205">        this.about = about;</span>
-<span class="nc" id="L206">    }</span>
+<span class="nc" id="L206">        this.about = about;</span>
+<span class="nc" id="L207">    }</span>
 
     public List&lt;Posts&gt; getPosts() {
-<span class="nc" id="L209">        return posts;</span>
+<span class="nc" id="L210">        return posts;</span>
     }
 
     public void setPosts(List&lt;Posts&gt; posts) {
-<span class="nc" id="L213">        this.posts = posts;</span>
-<span class="nc" id="L214">    }</span>
+<span class="fc" id="L214">        this.posts = posts;</span>
+<span class="fc" id="L215">    }</span>
 
     public DoctorsSchedule getDoctorsSchedule() {
-<span class="nc" id="L217">        return doctorsSchedule;</span>
+<span class="nc" id="L218">        return doctorsSchedule;</span>
     }
 
     public void setDoctorsSchedule(DoctorsSchedule doctorsSchedule) {
-<span class="nc" id="L221">        this.doctorsSchedule = doctorsSchedule;</span>
-<span class="nc" id="L222">    }</span>
+<span class="nc" id="L222">        this.doctorsSchedule = doctorsSchedule;</span>
+<span class="nc" id="L223">    }</span>
 
     //    public List&lt;Contact&gt; getContactList() {
 //        return contactList;
@@ -232,7 +233,7 @@ public class User {
 
     @Override
     public String toString() {
-<span class="fc" id="L235">        return &quot;User{&quot; +</span>
+<span class="fc" id="L236">        return &quot;User{&quot; +</span>
                 &quot;id=&quot; + id +
                 &quot;, name='&quot; + name + '\'' +
                 &quot;, email='&quot; + email + '\'' +

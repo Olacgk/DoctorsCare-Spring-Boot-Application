@@ -1,5 +1,9 @@
-C:\Users\timoc\Documents\CoursMaster2\Securite\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\HomeControllerTest.java
-C:\Users\timoc\Documents\CoursMaster2\Securite\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\doctor\DoctorPostHomepageTest.java
-C:\Users\timoc\Documents\CoursMaster2\Securite\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\patient\PatientMainControllerTest.java
-C:\Users\timoc\Documents\CoursMaster2\Securite\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\DoctorsCareSpringBootApplicationTests.java
-C:\Users\timoc\Documents\CoursMaster2\Securite\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\doctor\DoctorMainControllerTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\admin\AdminEarningsTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\doctor\DoctorMainControllerTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\patient\AppointDoctorValidatorTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\doctor\DoctorPostHomepageTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\HomeControllerTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\DoctorsCareSpringBootApplicationTests.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\admin\AdminMainControllerTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\patient\PatientMainControllerTest.java
+C:\Users\Lenovo-Miray_Tech\DevWeb\Spring Boot\DoctorsCare-Spring-Boot-Application\src\test\java\com\example\doctorscarespringbootapplication\controller\doctor\DoctorPrescriptionTest.java

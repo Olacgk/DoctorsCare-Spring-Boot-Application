@@ -43,52 +43,52 @@ import java.util.List;
 
     @GetMapping(&quot;/index&quot;)
     public String doctorHome(Model model, Principal principal) {
-<span class="nc" id="L46">        model.addAttribute(&quot;title&quot;, &quot;Doctors Dashboard&quot;);</span>
-<span class="nc" id="L47">        User user = userRepository.getUserByEmailNative(principal.getName());</span>
+<span class="fc" id="L46">        model.addAttribute(&quot;title&quot;, &quot;Doctors Dashboard&quot;);</span>
+<span class="fc" id="L47">        User user = userRepository.getUserByEmailNative(principal.getName());</span>
 //        Three cards data
-<span class="nc" id="L49">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L49">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
 
-<span class="nc" id="L51">        LocalDateTime now = LocalDateTime.now();</span>
-<span class="nc" id="L52">        String todayDate = dtfDate.format(now);</span>
-<span class="nc" id="L53">        String todaysAppointmentCount = appointDoctorRepository.countAllByAppointmentDateAndDoctorID(Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
-<span class="nc" id="L54">        String todaysCompletedAppointment = prescriptionRepository.countAllByAppointDoctorAppointmentDateAndMedicinesIsNotNullAndAppointDoctorDoctorID(Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
-<span class="nc" id="L55">        model.addAttribute(&quot;todaysAppointment&quot;, todaysAppointmentCount);</span>
-<span class="nc" id="L56">        model.addAttribute(&quot;todaysCompletedAppointment&quot;, todaysCompletedAppointment);</span>
+<span class="fc" id="L51">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L52">        String todayDate = dtfDate.format(now);</span>
+<span class="fc" id="L53">        String todaysAppointmentCount = appointDoctorRepository.countAllByAppointmentDateAndDoctorID(Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
+<span class="fc" id="L54">        String todaysCompletedAppointment = prescriptionRepository.countAllByAppointDoctorAppointmentDateAndMedicinesIsNotNullAndAppointDoctorDoctorID(Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
+<span class="fc" id="L55">        model.addAttribute(&quot;todaysAppointment&quot;, todaysAppointmentCount);</span>
+<span class="fc" id="L56">        model.addAttribute(&quot;todaysCompletedAppointment&quot;, todaysCompletedAppointment);</span>
 
-<span class="nc" id="L58">        String todaysGivenPrescriptions = prescriptionRepository.countAllByAppointDoctorAppointmentDateAndMedicinesIsNotNullAndAppointDoctorDoctorID(Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
-<span class="nc" id="L59">        String totalPrescriptions = prescriptionRepository.countAllByAppointDoctorDoctorID(user.getId() + &quot;&quot;);</span>
-<span class="nc" id="L60">        model.addAttribute(&quot;todaysGivenPrescriptions&quot;, todaysGivenPrescriptions);</span>
-<span class="nc" id="L61">        model.addAttribute(&quot;totalGivenPrescriptions&quot;, totalPrescriptions);</span>
+<span class="fc" id="L58">        String todaysGivenPrescriptions = prescriptionRepository.countAllByAppointDoctorAppointmentDateAndMedicinesIsNotNullAndAppointDoctorDoctorID(Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
+<span class="fc" id="L59">        String totalPrescriptions = prescriptionRepository.countAllByAppointDoctorDoctorID(user.getId() + &quot;&quot;);</span>
+<span class="fc" id="L60">        model.addAttribute(&quot;todaysGivenPrescriptions&quot;, todaysGivenPrescriptions);</span>
+<span class="fc" id="L61">        model.addAttribute(&quot;totalGivenPrescriptions&quot;, totalPrescriptions);</span>
 
-<span class="nc" id="L63">        long totalPosts = postsRepository.count();</span>
-<span class="nc" id="L64">        long totalSavedPosts = savedPostsRepository.countBySaverId(user.getId() + &quot;&quot;);</span>
-<span class="nc" id="L65">        model.addAttribute(&quot;totalPosts&quot;, totalPosts);</span>
-<span class="nc" id="L66">        model.addAttribute(&quot;totalSavedPosts&quot;, totalSavedPosts);</span>
+<span class="fc" id="L63">        long totalPosts = postsRepository.count();</span>
+<span class="fc" id="L64">        long totalSavedPosts = savedPostsRepository.countBySaverId(user.getId() + &quot;&quot;);</span>
+<span class="fc" id="L65">        model.addAttribute(&quot;totalPosts&quot;, totalPosts);</span>
+<span class="fc" id="L66">        model.addAttribute(&quot;totalSavedPosts&quot;, totalSavedPosts);</span>
 //        Upcoming Appointments
-<span class="nc" id="L68">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;);</span>
-<span class="nc" id="L69">        LocalDateTime localDateTime = LocalDateTime.now();</span>
-<span class="nc" id="L70">        LocalDateTime value = localDateTime.minus(30, ChronoUnit.MINUTES);</span>
-<span class="nc" id="L71">        Time currentTimeMinus30 = Time.valueOf(dateTimeFormatter.format(value));</span>
+<span class="fc" id="L68">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;);</span>
+<span class="fc" id="L69">        LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="fc" id="L70">        LocalDateTime value = localDateTime.minus(30, ChronoUnit.MINUTES);</span>
+<span class="fc" id="L71">        Time currentTimeMinus30 = Time.valueOf(dateTimeFormatter.format(value));</span>
 
-<span class="nc" id="L73">        List&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository.findAllByAppointmentDateAndPatientIDAndAppointmentTimeGreaterThanOrderByAppointmentTimeAsc(Date.valueOf(todayDate), principal.getName(), currentTimeMinus30);</span>
-<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (appointDoctorList.size() != 0) {</span>
+<span class="fc" id="L73">        List&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository.findAllByAppointmentDateAndPatientIDAndAppointmentTimeGreaterThanOrderByAppointmentTimeAsc(Date.valueOf(todayDate), principal.getName(), currentTimeMinus30);</span>
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (appointDoctorList.size() != 0) {</span>
 <span class="nc" id="L75">            model.addAttribute(&quot;appointDoctorList&quot;, appointDoctorList);</span>
         } else {
-<span class="nc" id="L77">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L77">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
         }
 
 //        Top 3 doctors
-<span class="nc" id="L81">        List&lt;User&gt; userList = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L82">        List&lt;String&gt; top3DoctorsList = appointDoctorRepository.findTop3DoctorsNativeQuery();</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (String s : top3DoctorsList) {</span>
-<span class="nc" id="L84">            User userX = userRepository.findById(Integer.parseInt(s));</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">            if (userX != null) {</span>
-<span class="nc" id="L86">                userList.add(userX);</span>
+<span class="fc" id="L81">        List&lt;User&gt; userList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L82">        List&lt;String&gt; top3DoctorsList = appointDoctorRepository.findTop3DoctorsNativeQuery();</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (String s : top3DoctorsList) {</span>
+<span class="fc" id="L84">            User userX = userRepository.findById(Integer.parseInt(s));</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">            if (userX != null) {</span>
+<span class="fc" id="L86">                userList.add(userX);</span>
             }
-<span class="nc" id="L88">        }</span>
-<span class="nc" id="L89">        model.addAttribute(&quot;userList&quot;, userList);</span>
-<span class="nc" id="L90">        addCommonData(model, principal);</span>
-<span class="nc" id="L91">        return &quot;doctor/doctor_home&quot;;</span>
+<span class="fc" id="L88">        }</span>
+<span class="fc" id="L89">        model.addAttribute(&quot;userList&quot;, userList);</span>
+<span class="fc" id="L90">        addCommonData(model, principal);</span>
+<span class="fc" id="L91">        return &quot;doctor/doctor_home&quot;;</span>
     }
 
     @GetMapping(&quot;/profile&quot;)
@@ -100,23 +100,23 @@ import java.util.List;
 
     @GetMapping(&quot;/meet-patient&quot;)
     public String doctorMeetPatient(Model model, Principal principal) throws ParseException {
-<span class="nc" id="L103">        model.addAttribute(&quot;title&quot;, &quot;Meet Patient&quot;);</span>
+<span class="fc" id="L103">        model.addAttribute(&quot;title&quot;, &quot;Meet Patient&quot;);</span>
 
-<span class="nc" id="L105">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L105">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
 
-<span class="nc" id="L107">        LocalDateTime now = LocalDateTime.now();</span>
-<span class="nc" id="L108">        String todaysDate = dtfDate.format(now);</span>
+<span class="fc" id="L107">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L108">        String todaysDate = dtfDate.format(now);</span>
 
-<span class="nc" id="L110">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;);</span>
-<span class="nc" id="L111">        LocalDateTime localDateTime = LocalDateTime.now();</span>
-<span class="nc" id="L112">        LocalDateTime value = localDateTime.minus(30, ChronoUnit.MINUTES);</span>
-<span class="nc" id="L113">        Time currentTimeMinus30 = Time.valueOf(dateTimeFormatter.format(value));</span>
+<span class="fc" id="L110">        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;HH:mm:ss&quot;);</span>
+<span class="fc" id="L111">        LocalDateTime localDateTime = LocalDateTime.now();</span>
+<span class="fc" id="L112">        LocalDateTime value = localDateTime.minus(30, ChronoUnit.MINUTES);</span>
+<span class="fc" id="L113">        Time currentTimeMinus30 = Time.valueOf(dateTimeFormatter.format(value));</span>
 
-<span class="nc" id="L115">        User userDoctor = this.userRepository.getUserByEmailNative(principal.getName());</span>
-<span class="nc" id="L116">        String doctorsID = userDoctor.getId() + &quot;&quot;;</span>
+<span class="fc" id="L115">        User userDoctor = this.userRepository.getUserByEmailNative(principal.getName());</span>
+<span class="fc" id="L116">        String doctorsID = userDoctor.getId() + &quot;&quot;;</span>
 
-<span class="nc" id="L118">        List&lt;AppointDoctor&gt; appointDoctorList = this.appointDoctorRepository.findAllByAppointmentDateAndDoctorIDAndAppointmentTimeGreaterThanOrderByAppointmentTimeAsc(Date.valueOf(todaysDate), doctorsID, currentTimeMinus30);</span>
-<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (appointDoctorList.size() != 0) {</span>
+<span class="fc" id="L118">        List&lt;AppointDoctor&gt; appointDoctorList = this.appointDoctorRepository.findAllByAppointmentDateAndDoctorIDAndAppointmentTimeGreaterThanOrderByAppointmentTimeAsc(Date.valueOf(todaysDate), doctorsID, currentTimeMinus30);</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">        if (appointDoctorList.size() != 0) {</span>
 <span class="nc" id="L120">            AppointDoctor appointDoctor = appointDoctorList.get(0);</span>
 <span class="nc" id="L121">            model.addAttribute(&quot;senderEmailDoctor&quot;, principal.getName());</span>
 <span class="nc" id="L122">            model.addAttribute(&quot;receiverEmailDoctor&quot;, appointDoctor.getPatientID());</span>
@@ -128,64 +128,64 @@ import java.util.List;
 <span class="nc" id="L128">            model.addAttribute(&quot;doctorProfileImage&quot;, userDoctor.getImageURL());</span>
 <span class="nc" id="L129">            PatientMainController.appointmentCountDown(model, dateTimeFormatter, localDateTime, appointDoctor);</span>
 <span class="nc" id="L130">        } else {</span>
-<span class="nc" id="L131">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L131">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
         }
 
-<span class="nc" id="L134">        addCommonData(model, principal);</span>
-<span class="nc" id="L135">        return &quot;doctor/doctor_meet_patient&quot;;</span>
+<span class="fc" id="L134">        addCommonData(model, principal);</span>
+<span class="fc" id="L135">        return &quot;doctor/doctor_meet_patient&quot;;</span>
     }
 
     @GetMapping(&quot;/todays-appointment&quot;)
     public String patientTodayAppointment(Model model, Principal principal) {
-<span class="nc" id="L140">        model.addAttribute(&quot;title&quot;, &quot;Today's Appointment&quot;);</span>
+<span class="fc" id="L140">        model.addAttribute(&quot;title&quot;, &quot;Today's Appointment&quot;);</span>
 
-<span class="nc" id="L142">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L142">        DateTimeFormatter dtfDate = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
 
-<span class="nc" id="L144">        LocalDateTime now = LocalDateTime.now();</span>
-<span class="nc" id="L145">        String todayDate = dtfDate.format(now);</span>
+<span class="fc" id="L144">        LocalDateTime now = LocalDateTime.now();</span>
+<span class="fc" id="L145">        String todayDate = dtfDate.format(now);</span>
 
-<span class="nc" id="L147">        User user = userRepository.getUserByEmailNative(principal.getName());</span>
-<span class="nc" id="L148">        List&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository</span>
+<span class="fc" id="L147">        User user = userRepository.getUserByEmailNative(principal.getName());</span>
+<span class="fc" id="L148">        List&lt;AppointDoctor&gt; appointDoctorList = appointDoctorRepository</span>
                 .findAllByAppointmentDateAndDoctorIDOrderByAppointmentTimeAsc
-<span class="nc" id="L150">                        (Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
+<span class="fc" id="L150">                        (Date.valueOf(todayDate), user.getId() + &quot;&quot;);</span>
 
 
-<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (appointDoctorList.size() != 0) {</span>
-<span class="nc" id="L154">            model.addAttribute(&quot;appointDoctorList&quot;, appointDoctorList);</span>
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">        if (appointDoctorList.size() != 0) {</span>
+<span class="fc" id="L154">            model.addAttribute(&quot;appointDoctorList&quot;, appointDoctorList);</span>
         } else {
 <span class="nc" id="L156">            model.addAttribute(&quot;noDoctorAppointment&quot;, &quot;true&quot;);</span>
         }
-<span class="nc" id="L158">        addCommonData(model, principal);</span>
-<span class="nc" id="L159">        return &quot;doctor/doctor_today's_appointment&quot;;</span>
+<span class="fc" id="L158">        addCommonData(model, principal);</span>
+<span class="fc" id="L159">        return &quot;doctor/doctor_today's_appointment&quot;;</span>
     }
 
     @GetMapping(&quot;/view-prescriptions/{page}&quot;)
     public String viewPrescriptions(@PathVariable(&quot;page&quot;) Integer page, Model model, Principal principal) {
-<span class="nc" id="L164">        model.addAttribute(&quot;title&quot;, &quot;View Prescriptions&quot;);</span>
-<span class="nc" id="L165">        Pageable pageable = PageRequest.of(page - 1, 8);</span>
-<span class="nc" id="L166">        User user = this.userRepository.getUserByEmailNative(principal.getName());</span>
-<span class="nc" id="L167">        Page&lt;Prescription&gt; prescriptionList = prescriptionRepository</span>
-<span class="nc" id="L168">                .findByAppointDoctorDoctorIDAndSymptomsIsNotOrderByIdDesc(user.getId() + &quot;&quot;, pageable, &quot;&quot;);</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (prescriptionList.getTotalElements() == 0) {</span>
+<span class="fc" id="L164">        model.addAttribute(&quot;title&quot;, &quot;View Prescriptions&quot;);</span>
+<span class="fc" id="L165">        Pageable pageable = PageRequest.of(page - 1, 8);</span>
+<span class="fc" id="L166">        User user = this.userRepository.getUserByEmailNative(principal.getName());</span>
+<span class="fc" id="L167">        Page&lt;Prescription&gt; prescriptionList = prescriptionRepository</span>
+<span class="fc" id="L168">                .findByAppointDoctorDoctorIDAndSymptomsIsNotOrderByIdDesc(user.getId() + &quot;&quot;, pageable, &quot;&quot;);</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (prescriptionList.getTotalElements() == 0) {</span>
 <span class="nc" id="L170">            model.addAttribute(&quot;noPrescription&quot;, &quot;true&quot;);</span>
         }
-<span class="nc" id="L172">        model.addAttribute(&quot;prescriptionList&quot;, prescriptionList);</span>
-<span class="nc" id="L173">        model.addAttribute(&quot;currentPage&quot;, page);</span>
-<span class="nc" id="L174">        model.addAttribute(&quot;totalPages&quot;, prescriptionList.getTotalPages());</span>
-<span class="nc" id="L175">        addCommonData(model, principal);</span>
-<span class="nc" id="L176">        return &quot;doctor/doctor_view_prescriptions&quot;;</span>
+<span class="fc" id="L172">        model.addAttribute(&quot;prescriptionList&quot;, prescriptionList);</span>
+<span class="fc" id="L173">        model.addAttribute(&quot;currentPage&quot;, page);</span>
+<span class="fc" id="L174">        model.addAttribute(&quot;totalPages&quot;, prescriptionList.getTotalPages());</span>
+<span class="fc" id="L175">        addCommonData(model, principal);</span>
+<span class="fc" id="L176">        return &quot;doctor/doctor_view_prescriptions&quot;;</span>
     }
 
     @PostMapping(&quot;/view-single-prescription&quot;)
     public String viewSinglePrescription(@RequestParam String appointmentID, Model model, Principal principal) {
-<span class="nc" id="L181">        model.addAttribute(&quot;title&quot;, &quot;Single Prescription&quot;);</span>
-<span class="nc" id="L182">        model.addAttribute(&quot;appointmentID&quot;, appointmentID);</span>
-<span class="nc" id="L183">        AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(appointmentID));</span>
-<span class="nc" id="L184">        User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
-<span class="nc" id="L185">        model.addAttribute(&quot;appointDoctor&quot;, appointDoctor);</span>
-<span class="nc" id="L186">        model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
-<span class="nc" id="L187">        addCommonData(model, principal);</span>
-<span class="nc" id="L188">        return &quot;doctor/doctor_view_single_prescription&quot;;</span>
+<span class="fc" id="L181">        model.addAttribute(&quot;title&quot;, &quot;Single Prescription&quot;);</span>
+<span class="fc" id="L182">        model.addAttribute(&quot;appointmentID&quot;, appointmentID);</span>
+<span class="fc" id="L183">        AppointDoctor appointDoctor = appointDoctorRepository.findById(Integer.parseInt(appointmentID));</span>
+<span class="fc" id="L184">        User patientUser = userRepository.getUserByEmailNative(appointDoctor.getPatientID());</span>
+<span class="fc" id="L185">        model.addAttribute(&quot;appointDoctor&quot;, appointDoctor);</span>
+<span class="fc" id="L186">        model.addAttribute(&quot;patientUser&quot;, patientUser);</span>
+<span class="fc" id="L187">        addCommonData(model, principal);</span>
+<span class="fc" id="L188">        return &quot;doctor/doctor_view_single_prescription&quot;;</span>
     }
 
 
