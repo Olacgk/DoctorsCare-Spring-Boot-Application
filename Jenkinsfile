@@ -103,59 +103,20 @@ pipeline {
 			}
 		}
 
-		stage('Clean Workspace') {
-			steps {
-				script {
-					def cleanCmd = 'mvn clean'
-					isUnix() ? sh(cleanCmd) : bat(cleanCmd)
-				}
-			}
-		}
-
-		stage('Run Spring Boot App') {
-			steps {
-				echo '🚀 Démarrage de l\'application Spring Boot'
-				script {
-					def startCmd = 'mvn spring-boot:run'
-					isUnix() ? sh(startCmd) : bat(startCmd)
-				}
-
-				echo '⏳ Attente du démarrage'
-				script {
-					if (isUnix()) {
-						sh 'sleep 20'
-					} else {
-						bat 'timeout /T 20 /NOBREAK'
-					}
-				}
-			}
-		}
-
-        stage('Run OWASP ZAP Scan') {
-			steps {
-				echo '🛡️ Lancement de OWASP ZAP baseline scan'
-				script {
-					if (isUnix()) {
-						sh """
-							"${ZAP_PATH}" -cmd -quickurl ${TARGET_URL} \
-							-quickout ${ZAP_REPORT} \
-							-quickprogress
-						"""
-					} else {
-						bat """
-							"${ZAP_PATH}" -cmd -quickurl ${TARGET_URL} ^
-							-quickout ${ZAP_REPORT} ^
-							-quickprogress
-						"""
-					}
-				}
+		stage('Check Docker Access') {
+            steps {
+                script {
+                    isUnix() ? sh('docker --version') : bat('docker --version')
+                }
             }
         }
 
-        stage('Archive ZAP Report') {
-			steps {
-				echo '📦 Archive du rapport ZAP'
-                archiveArtifacts artifacts: "${ZAP_REPORT}", onlyIfSuccessful: true
+
+		stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t olacgk/tpzapsecurity ."
+                }
             }
         }
 	}
@@ -166,17 +127,6 @@ pipeline {
 		}
 		failure {
 			echo '❌ Une erreur est survenue. Voir les logs pour plus de détails.'
-		}
-		always {
-			echo '📦 Pipeline terminé (succès ou échec).'
-			echo '🧹 Nettoyage - arrêt de l\'application Spring Boot'
-			script {
-				if (isUnix()) {
-					sh 'pkill -f "target/.*.jar" || true'
-				} else {
-					bat 'taskkill /F /IM java.exe || exit 0'
-				}
-			}
 		}
 	}
 }
