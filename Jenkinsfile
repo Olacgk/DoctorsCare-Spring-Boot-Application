@@ -9,9 +9,8 @@ pipeline {
     environment {
 		SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
         SONAR_TOKEN = credentials('SonarQube_token')
-        ZAP_PATH = 'C:\\Program Files\\ZAP\\Zed Attack Proxy\\zap.bat'
         ZAP_REPORT = 'zap-report.html'
-        TARGET_URL = 'http://localhost:8083'
+        TARGET_URL = 'http://host.docker.internal:8083'
     }
 
     stages {
@@ -69,7 +68,7 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
+         stage('Quality Gate') {
 			steps {
 				script{
 					try {
@@ -112,13 +111,48 @@ pipeline {
         }
 
 
-		stage('Build Docker Image') {
+        stage('Build & Push Docker Image'){
             steps {
                 script {
-                    sh "docker build -t olacgk/tpzapsecurity ."
+                 withCredentials([usernamePassword(
+                    credentialsId: 'docker-hub-creds',
+                    usernameVariable: 'DOCKER_USERNAME',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    sh """
+                        docker build -t olacgk/tpzapsecurity:latest .
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker push olacgk/tpzapsecurity:latest
+                    """
                 }
+                }
+
             }
         }
+
+        stage('Run OWASP ZAP Scan') {
+	steps {
+		echo '🛡️ Lancement de OWASP ZAP baseline scan'
+		script {
+            def hostIp = sh(script: "hostname -I | awk '{print \$1}'", returnStdout: true).trim()
+            env.TARGET_URL = "http://${hostIp}:8083"
+
+            sh """
+                docker run --rm \\
+                  --user \$(id -u):\$(id -g) \\
+                  --network=host \\
+                  -v ${env.WORKSPACE}:/zap/wrk:rw \\
+                  zaproxy/zap-stable zap-baseline.py \\
+                  -t ${env.TARGET_URL} \\
+                  -r zap-report.html \\
+                  -J zap-report.json \\
+                  -z "-config api.disablekey=true"
+            """
+            sh 'ls -la zap-report.*'
+		}
+	}
+}
+
 	}
 
 	post {
@@ -128,5 +162,14 @@ pipeline {
 		failure {
 			echo '❌ Une erreur est survenue. Voir les logs pour plus de détails.'
 		}
+		always {
+        junit 'target/surefire-reports/*.xml'
+            sh '''
+                mkdir -p reports
+                cp zap-report.* reports/ || true
+                cp target/surefire-reports/* reports/ || true
+            '''
+            archiveArtifacts artifacts: 'reports/**', fingerprint: true
+    }
 	}
 }
