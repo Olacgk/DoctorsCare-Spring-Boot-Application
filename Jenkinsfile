@@ -22,9 +22,11 @@ pipeline {
 					if (isUnix()) {
 						sh 'mvn --version'
                         sh 'java --version'
+                        sh 'docker --version'
                     } else {
 						bat 'mvn --version'
                         bat 'java --version'
+                        bat 'docker --version'
                     }
                 }
             }
@@ -102,14 +104,6 @@ pipeline {
 			}
 		}
 
-		stage('Check Docker Access') {
-            steps {
-                script {
-                    isUnix() ? sh('docker --version') : bat('docker --version')
-                }
-            }
-        }
-
 
         stage('Build & Push Docker Image'){
             steps {
@@ -131,27 +125,39 @@ pipeline {
         }
 
         stage('Run OWASP ZAP Scan') {
-	steps {
-		echo '🛡️ Lancement de OWASP ZAP baseline scan'
-		script {
-            def hostIp = sh(script: "hostname -I | awk '{print \$1}'", returnStdout: true).trim()
-            env.TARGET_URL = "http://${hostIp}:8083"
+            steps {
+                script {
+                    // 1. Run ZAP scan with proper paths
+                    sh """
+                        rm -rf /var/jenkins_home/workspace/TP_Security/zap-reports
+                      mkdir -p /var/jenkins_home/workspace/TP_Security/zap-reports
+                      chmod 777 /var/jenkins_home/workspace/TP_Security/zap-reports
+                        docker run --rm \
+                          -v ${WORKSPACE}/zap-reports:/zap/wrk:rw \
+                          -u root \
+                          --network=host \
+                          zaproxy/zap-stable zap-baseline.py \
+                          -t http://host.docker.internal:8083 \
+                          -r /zap/wrk/zap-report.html \
+                          -J /zap/wrk/zap-report.json \
+                          -z "-config api.disablekey=true -config connection.timeoutInSecs=300"
+                    """
 
-            sh """
-                docker run --rm \\
-                  --user \$(id -u):\$(id -g) \\
-                  --network=host \\
-                  -v ${env.WORKSPACE}:/zap/wrk:rw \\
-                  zaproxy/zap-stable zap-baseline.py \\
-                  -t ${env.TARGET_URL} \\
-                  -r zap-report.html \\
-                  -J zap-report.json \\
-                  -z "-config api.disablekey=true"
-            """
-            sh 'ls -la zap-report.*'
-		}
-	}
-}
+                    // 2. Verify and move reports
+                    sh '''
+                        echo "Generated reports:"
+                        ls -la ${WORKSPACE}/zap-reports/
+
+                        # Copy reports to workspace root
+                        cp ${WORKSPACE}/zap-reports/zap-report.* ${WORKSPACE}/ || true
+                        chmod -R 777 ${WORKSPACE}/zap-report.*
+
+                        echo "Final reports in workspace:"
+                        ls -la ${WORKSPACE}/zap-report.*
+                    '''
+                }
+            }
+        }
 
 	}
 
